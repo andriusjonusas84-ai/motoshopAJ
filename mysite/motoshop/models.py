@@ -22,6 +22,10 @@ class CustomUser(AbstractUser):
             img = img.resize((300, 300), Image.LANCZOS)
             img.save(self.photo.path)
 
+    class Meta:
+        verbose_name = 'Vartotojas'
+        verbose_name_plural = 'Vartotojai'
+
 class Product(models.Model):
     title = models.CharField(verbose_name='Pavadinimas')
     code = models.CharField(verbose_name='Prekės kodas', max_length=10)
@@ -30,7 +34,6 @@ class Product(models.Model):
         ('2', 'Atsarginės dalys'),
         ('3', 'Apranga'),
         ('4', 'Aksesuarai'),
-        ('5', 'Padangos'),
     )
     category = models.CharField(verbose_name='Kategorija',
                                 max_length=1,
@@ -124,7 +127,7 @@ class OrderLine(models.Model):
 
     class Meta:
         verbose_name = 'Užsakymo eilutė'
-        verbose_name_plural = 'žsakymo eilutės'
+        verbose_name_plural = 'Užsakymo eilutės'
 
     def __str__(self):
         return f'{self.product.title} - {self.quantity}'
