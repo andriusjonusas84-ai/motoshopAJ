@@ -89,6 +89,19 @@ class Product(models.Model):
                               null=True,
                               blank=True)
 
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     if self.cover:
+    #         img = Image.open(self.cover.path)
+    #         min_side = min(img.width, img.height)
+    #         left = (img.width - min_side) // 2
+    #         top = (img.height - min_side) // 2
+    #         right = left + min_side
+    #         bottom = top + min_side
+    #         img = img.crop((left, top, right, bottom))
+    #         img = img.resize((300, 300), Image.LANCZOS)
+    #         img.save(self.cover.path)
+
     class Meta:
         verbose_name = 'Prekė'
         verbose_name_plural = 'Prekės'
@@ -121,6 +134,7 @@ class Order(models.Model):
     due_date = models.DateField(verbose_name='Užsakymo užbaigimo data')
 
     class Meta:
+        ordering = ['-pk']
         verbose_name = 'Užsakymas'
         verbose_name_plural = 'Užsakymai'
 
@@ -128,6 +142,11 @@ class Order(models.Model):
         return sum(line.order_line_sum() for line in self.ol.all())
 
     order_sum.short_description = 'Užsakymo suma'
+
+    def product_quantity(self):
+        return sum(line.quantity for line in self.ol.all())
+
+    order_sum.short_description = 'Prekių kiekis'
 
     def __str__(self):
         return f'{self.pk}'
@@ -205,6 +224,25 @@ class Comment(models.Model):
                              to="Post",
                              on_delete=models.CASCADE,
                              related_name='comments')
+    content = models.TextField(verbose_name='Komentaras')
+    author = models.ForeignKey(verbose_name='Komentatorius',
+                               to=CustomUser,
+                               on_delete=models.CASCADE)
+    created = models.DateTimeField(verbose_name='Komentaro data',auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.content}"
+
+    class Meta:
+        ordering = ["-pk"]
+        verbose_name = 'Komentaras'
+        verbose_name_plural = 'Komentarai'
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(verbose_name='Produktas',
+                             to="Product",
+                             on_delete=models.CASCADE,
+                             related_name='reviews')
     content = models.TextField(verbose_name='Komentaras')
     author = models.ForeignKey(verbose_name='Komentatorius',
                                to=CustomUser,
