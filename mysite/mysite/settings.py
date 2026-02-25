@@ -45,6 +45,7 @@ EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 INSTALLED_APPS = [
     'motoshop',
     'tinymce',
+    'smart_selects',
     'crispy_forms',
     'crispy_bootstrap5',
     'django.contrib.auth',

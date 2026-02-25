@@ -1,11 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from PIL import Image
+from django import forms
 from tinymce.models import HTMLField
+from smart_selects.db_fields import ChainedForeignKey
+
+
 
 
 class CustomUser(AbstractUser):
-    photo = models.ImageField(upload_to='profile_pics',
+    photo = models.ImageField(verbose_name='Nuotrauka',
+                              upload_to='profile_pics',
                               null=True,
                               blank=True)
 
@@ -26,10 +31,25 @@ class CustomUser(AbstractUser):
         verbose_name = 'Vartotojas'
         verbose_name_plural = 'Vartotojai'
 
+class ProductCategory(models.Model):
+    title = models.CharField(verbose_name='Kategorija')
+
+    class Meta:
+        verbose_name = 'Kategorija'
+        verbose_name_plural = 'Kategorijos'
+
+    def __str__(self):
+        return self.title
+
 class Product(models.Model):
     title = models.CharField(verbose_name='Pavadinimas')
     code = models.CharField(verbose_name='Prekės kodas', max_length=10)
-    product_category = (
+    product_category = models.ForeignKey(verbose_name='Prekės kategorija',
+                               to=ProductCategory,
+                               on_delete=models.CASCADE,
+                               null=True,
+                               blank=True)
+    p_category = (
         ('1', 'Motociklai'),
         ('2', 'Atsarginės dalys'),
         ('3', 'Apranga'),
@@ -37,7 +57,7 @@ class Product(models.Model):
     )
     category = models.CharField(verbose_name='Kategorija',
                                 max_length=1,
-                                choices=product_category)
+                                choices=p_category)
     manufacturer = models.CharField(verbose_name='Gamintojas')
     sizes = (
         ('1', 'S'),
@@ -104,6 +124,11 @@ class Order(models.Model):
         verbose_name = 'Užsakymas'
         verbose_name_plural = 'Užsakymai'
 
+    def order_sum(self):
+        return sum(line.order_line_sum() for line in self.ol.all())
+
+    order_sum.short_description = 'Užsakymo suma'
+
     def __str__(self):
         return f'{self.pk}'
 
@@ -115,19 +140,40 @@ class OrderLine(models.Model):
                               null = False,
                               blank = False,
                               related_name = 'ol')
-    product = models.ForeignKey(verbose_name='Produktas',
+    product_category = models.ForeignKey(verbose_name='Prekės kategorija',
+                                         to=ProductCategory,
+                                         on_delete=models.CASCADE,
+                                         null = True,
+                                         blank = True)
+    product = ChainedForeignKey(verbose_name='Produktas',
                                 to=Product,
+                                chained_field="product_category",
+                                chained_model_field="product_category",
+                                show_all=False,
+                                auto_choose=True,
+                                sort=True,
                                 on_delete=models.DO_NOTHING,
                                 db_constraint=False,
                                 null=False,
                                 blank=False,
-                                related_name='ol'
-                                )
+                                related_name='ol')
+
     quantity = models.PositiveIntegerField(verbose_name='Kiekis')
 
     class Meta:
         verbose_name = 'Užsakymo eilutė'
         verbose_name_plural = 'Užsakymo eilutės'
+
+    def order_line_sum(self):
+        return self.quantity * self.product.final_price
+
+    order_line_sum.short_description = 'Prekės suma'
+
+    def category_name(self):
+        return self.product.get_category_display()
+
+    def category_pk(self):
+        return self.product_category.pk
 
     def __str__(self):
         return f'{self.product.title} - {self.quantity}'
