@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Mano užsakymai{% endblock %}
+
+{% block content %}
+<div class="container mt-4 w-50">
+    <h2 class="text-start mb-3" >Mano užsakymai</h2>
+    {% for order in orders %}
+    <div class ="row mb-4" style="background-color: rgb(233,240,235)">
+        <div class="col p-3 ">
+            <p>Užsakymo nr.</p>
+            <p class="fw-bold">{{ order.pk }}</p>
+        </div>
+        <div class="col p-3 ">
+            <p>Pateikimo data</p>
+            <p class="fw-bold">{{ order.order_date|date:"Y-m-d" }}</p>
+        </div>
+        <div class="col p-3">
+            <p>Statusas</p>
+            <p class="fw-bold">{{ order.get_status_display }}</p>
+        </div>
+<!--        <div class="col p-3">-->
+<!--            <p>Prekių kiekis</p>-->
+<!--            <p class="fw-bold">{{ order.product_quantity }}</p>-->
+<!--        </div>-->
+        <div class="col p-3">
+            <p>Suma</p>
+            <p class="fw-bold">{{ order.order_sum }} &#8364; </p>
+        </div>
+        <div class="col p-3 align-self-center">
+            <button type="button" class="btn btn-success"><a href="{% url 'order' order.pk %}" class="text-white">Peržiūrėti <i class="bi bi-arrow-right"></i></a></button>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert aler-info" role="alert" style="background-color: rgb(233,240,235)">
+    <h4>Dar nesate pateikęs užsakymų, prašome nesikuklinti! Visą mūsų asortimentą rasite <a href="{% url 'products' %}" class="alert-link text-dark">čia</a></p>
+    </div>
+    {% endfor %}
+</div>
+{% if is_paginated %}
+<ul class="pagination pagination-sm justify-content-center mt-3">
+    <li><a class="page-link text-dark" href="?page=1">&laquo; Pirmas</a></li>
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+        <a class="page-link text-dark" href="?page={{ page_obj.previous_page_number }}">Ankstesnis</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link text-dark">Ankstesnis</span>
+    </li>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+    {% if page_obj.number == num %}
+    <li class="page-item active ">
+        <span class="page-link text-dark bg-success">{{ num }}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+        <a class="page-link text-dark" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+        <a class="page-link text-dark" href="?page={{ page_obj.next_page_number }}">Kitas</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link text-dark">Kitas</span>
+    </li>
+    {% endif %}
+    <li><a class="page-link text-dark" href="?page={{ page_obj.paginator.num_pages }}">Paskutinis &raquo;</a></li>
+</ul>
+{% endif %}
+{% endblock %}
+
+
+
+
+

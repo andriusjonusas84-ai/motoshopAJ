@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Užsakymas{% endblock %}
+
+{% block content %}
+<div class="container mt-4 w-100 border">
+    <div class="row">
+        <div class="col">
+            <p class="text-start mt-2" >Užsakymo numeris: <span class="fw-bold">{{ order.pk }}</span></p>
+            <p class="text-start" >Pateikimo data: <span class="fw-bold">{{ order.order_date|date:"Y-m-d" }}</p>
+            <p class="text-start" >Užbaigimo data: <span class="fw-bold">{{ order.due_date|date:"Y-m-d" }}</p>
+            <p class="text-start text-uppercase fw-bold {% if order.status == '6' %}text-success{% endif %}">{{ order.get_status_display }}</p>
+        </div>
+        <div class="col text-end">
+            <button type="button" class="btn btn-success mt-2"><a href="{% url 'myorders' %}" class="text-white">Grįžti į užsakymų sąrašą</a></button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="2" class="text-start text-uppercase">Prekės</th>
+                <th class="text-start text-uppercase">Vieneto kaina</th>
+                <th class="text-start text-uppercase">Kiekis</th>
+                <th class="text-start text-uppercase"> Iš viso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in order.ol.all %}
+            <tr>
+                <td> <img class="" src="{{ line.product.cover.url  }}" alt="..." style="height:100px" ></td>
+                <td><a href="{% url 'product' line.product.pk %}" class="text-dark">{{ line.product.title }}</a>
+                    <a class="btn btn-warning" href="{% url 'orderline_update' line.pk %}">Redaguoti</a>
+                    <a class="btn btn-danger" href="{% url 'orderline_delete' line.pk %}">Trinti</a>
+                </td>
+                <td class="fw-bold"> {{ line.product.final_price }} &#8364; </td>
+                <td> {{ line.quantity }} </td>
+                <td class="fw-bold"> {{ line.order_line_sum }} &#8364;</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4" class="text-end fw-bold text-uppercase">Viso užsakymo suma</td>
+                <td class="fw-bold"> {{ order.order_sum }} &#8364; </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+
+

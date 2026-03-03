@@ -1,0 +1,29 @@
+body {
+  /* Match this to your footer's height */
+  padding-bottom: 70px;
+}
+
+a {
+text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+footer {
+    background-color: rgb(233,240,235);
+    color:black;
+    height: 60px
+}
+
+aside {
+  width: 30%;
+  padding-left: 15px;
+  margin-left: 15px;
+  float: right;
+}
+
+img.logo {
+  mix-blend-mode: multiply;
+}

@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light sticky-top">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="fs-5 fw-normal btn btn-sm btn-success" aria-current="page" href="{% url 'index' %}">Pradžia</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link fs-5 fw-bold active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Parduotuvė
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item fw-bold fs-5" href="#">Visos prekės</a></li>
+            <li><a class="dropdown-item" href="#">Motociklai</a></li>
+            <li><a class="dropdown-item" href="#">Apranga</a></li>
+            <li><a class="dropdown-item" href="#">Aksesuarai</a></li>
+            <li><a class="dropdown-item" href="#">Atsarginės dalys</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active fs-5 fw-bold" href="#">Remontas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active fs-5 fw-bold" href="#">Pasikalbam!</a>
+        </li>
+      </ul>
+       {% if user.is_staff %}
+       <a class="btn btn-warning me-2" href="admin/">Admin dalis</a>
+       {% endif %}
+<!--      <form class="d-flex">-->
+<!--        <input class="form-control me-2" type="search" placeholder="Ieškoti" aria-label="Search">-->
+<!--        <button class="btn btn-outline-success" type="submit">Paieška</button>-->
+<!--      </form>-->
+    </div>
+  </div>
+</nav>

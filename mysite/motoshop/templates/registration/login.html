@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Prisijungimas{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h2 class="mb-4 text-center">Prisijungimas</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% load crispy_forms_tags %}
+                {{ form | crispy }}
+                <button type="submit" class="btn btn-success w-100">Prisijungti</button>
+                <input type="hidden" name="next" value="{{ next }}"/>
+            </form>
+            <p><a href="{% url 'password_reset' %}" class="btn btn-link w-100 text-dark">Pamiršote slaptažodį?</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+

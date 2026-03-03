@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Prekė{% endblock %}
+
+{% block content %}
+<div class="container mt-4 w-100 ">
+    <h2 class="mt-2">{{ product.title }}</h2>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <p class="text-start mt-2" ><img class="" src="{{ product.cover.url  }}" alt="..." style="height:500px"></p>
+        </div>
+        <div class="col text-start">
+            {% if product.new_product %}
+            <h5 class="card-text fw-bold text-danger text-uppercase"> Naujiena! </h5>
+            {% endif %}
+            <h5 class="">Prekės kategorija:
+            {% if product.product_category.id  == 1 %}
+            <a class="text-dark fw-bold" href="{% url 'products1' %}">{{ product.product_category.title }}</a>
+            {% elif product.product_category.id  == 2 %}
+            <a class="text-dark fw-bold" href="{% url 'products2' %}">{{ product.product_category.title }}</a>
+            {% elif product.product_category.id  == 3 %}
+            <a class="text-dark fw-bold" href="{% url 'products3' %}">{{ product.product_category.title }}</a>
+            {% elif product.product_category.id  == 4 %}
+            <a class="text-dark fw-bold" href="{% url 'products4' %}">{{ product.product_category.title }}</a>
+            {% endif %}
+            </h5>
+            <h5 class="">Prekės kodas: {{ product.code }}</h5>
+            <h5 class="mt-2">Ar turime sandelyje:
+            {% if product.stocked %}
+            <span class="fw-bold text-success">Taip</span>
+            {% else %}
+            <span>Ne</span>
+            {% endif %}
+            </h5>
+            <h5 class="">Sandėlio/tiekėjo likutis: {{ product.stock_quantity }} vnt.</h5>
+            {% if product.final_price < product.rrp %}
+            <h5 class="">Įprasta kaina: {{ product.rrp }} &#8364;</h5>
+            <h5 class="fw-bold" style="color: var(--bs-orange);">Pardavimo kaina: {{ product.final_price }} &#8364;</h5>
+            {% else %}
+            <h5 class="">Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;<span></span></h5>
+            {% endif %}
+            <br><br><br><br><br><br><br><br><br>
+            <a href="#" class="mt-5 btn btn-lg btn-success">Dėti į krepšelį</a>
+        </div>
+    </div>
+    <h4 class="mt-2">Prekės aprašymas</h4>
+    <hr>
+    {% if product.definition %}
+    <p> {{ product.definition | safe }}</p>
+    {% endif %}
+    <h2 class="mb-3">Prekės komentarai</h2>
+    {% for review in product.reviews.all %}
+    <p>{% if review.author.photo %}
+    <img src="{{ review.author.photo.url }}" class="rounded-circle" style="width:30px">
+    {% else %}
+    <img class="rounded-circle" src="{% static '/images/helmet.jpg' %}" alt="..." style="width:30px" >
+    {% endif %}
+    <strong> {{ review.author }} </strong><em>{{ review.created }}</em></p>
+    <p>{{ review.content }}</p>
+    <hr>
+    {% empty %}
+    <p>Prekė neturi komentarų</p>
+    {% endfor %}
+    {% if user.is_authenticated %}
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        {{ form | crispy }}
+        <button type="submit" class="btn btn-warning">Paskelbti</button>
+    </form>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+

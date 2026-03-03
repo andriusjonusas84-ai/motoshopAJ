@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Užsakymo eilutės ištrynimas užsakyme{% endblock %}
+
+{% block content %}
+<div class="container w-25">
+<h5 class="mt-3 mb-3">Užsakymo eilutės ištrynimas užsakyme</h5>
+<p>Prekė: <span class="fw-bold">{{ object.product.title }}</span></p>
+<p>Kiekis: <span class="fw-bold">{{ object.quantity }}</span></p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger w-10">Trinti</button>
+    <a class="btn btn-warning w-10" href="{% url 'order' orderline.order.pk %}">Atšaukti</a>
+</form>
+</div>
+{% endblock %}

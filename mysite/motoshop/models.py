@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from PIL import Image
 from django import forms
+from django.views import generic
 from tinymce.models import HTMLField
 from smart_selects.db_fields import ChainedForeignKey
 
@@ -256,3 +257,4 @@ class ProductReview(models.Model):
         ordering = ["-pk"]
         verbose_name = 'Komentaras'
         verbose_name_plural = 'Komentarai'
+

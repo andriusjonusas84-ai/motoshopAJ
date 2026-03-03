@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}AJ motociklai{% endblock %}
+
+{% block content %}
+<div class="container mt-4 w-75 p-2">
+        <h2>Sveiki atvykę į nuotykių motociklų pasaulį! </h2>
+      <br>
+        <h5>Čia prasideda kelionės be ribų. AJ motociklai el. parduotuvėje rasite motociklus ir kruopščiai atrinktą įrangą, dalis ir aksesuarus adventure tipo motociklams – nuo kasdienio važiavimo iki ekstremalių nuotykių bekelėje.
+
+Mes tikime ne tik produktais, bet ir patirtimi: patikimumu, kokybe ir laisve rinktis savo maršrutą. Nesvarbu, ar planuojate ilgą ekspediciją, ar trumpą pabėgimą nuo rutinos – mes pasiruošę padėti.
+
+Užveskite variklį. Nuotykiai laukia!</h5><br>
+        <h3 class="mb-3">Mūsų parduotuvėje rasite</h3>
+    <aside>
+        <img class="center-img" src="{% static 'images/cfmoto450mt.png' %}" alt="..." style="height:200px" >
+    </aside>
+    <ul class="">
+        <li><p class="fs-5 fw-bold">Naujausius adventure tipo motociklus (300-500 CC klasėje)</p></li>
+        <li><p class="fs-5 fw-bold">Pagrindines motociklų atsargines dalis (padangos,filtrai, alyvos ir pan.)</p></li>
+        <li><p class="fs-5 fw-bold">Žymiausių gamintojų aprangą, pirštines, šalmus ir aksesuarus</p></li>
+        <li><p class="fs-5 fw-bold">Parduotuvėje viso turime {{ products }} produktus</p></li>
+        <li><p class="fs-5 fw-bold">Mūsų servise patyrę ir kvalifikuoti meistrai sutvarkys visasjūsų motociklų problemas</p></li>
+    </ul>
+
+    <div class="container mt-5 w-75">
+    <img class="" src="{% static 'images/honda-logo.png' %}" alt="..." style="height:180px" >
+    <img class="" src="{% static 'images/cfmoto-logo.png' %}" alt="..." style="height:180px" >
+    <img class="" src="{% static 'images/shoei-logo.png' %}" alt="..." style="height:180px" >
+    <img class="" src="{% static 'images/kn-logo.png' %}" alt="..." style="height:180px" >
+    <img class="" src="{% static 'images/Richa.png' %}" alt="..." style="height:180px" >
+    <img class="" src="{% static 'images/oxford-logo.jpg' %}" alt="..." style="height:180px" >
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+

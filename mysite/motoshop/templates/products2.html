@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Parduotuvė/dalys{% endblock %}
+
+{% block content %}
+<div class="container mt-4 w-75">
+    <h2 class="text-start mb-3" >Atsarginės dalys</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for product in products2 %}
+        <div class="col">
+            <div class="card" style="width: 20rem;height: 41rem;">
+              <img class="card-img-top" src="{{ product.cover.url  }}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title"><a class="text-dark" href="{% url 'product' product.pk %}">{{ product.title }}</a></h5>
+                {% if product.new_product %}
+                <p class="card-text fw-bold text-danger text-uppercase"> Naujiena! </p>
+                {% endif %}
+                <p class="card-text fw-bold" style="background-color: rgb(237, 242, 191)"> {{ product.product_category.title }} </p>
+                {% if product.final_price < product.rrp %}
+                <p class="card-text"> Įprasta kaina: <span class="fw-bold">{{ product.rrp }} &#8364;</span></p>
+                <p class="card-text"> Pardavimo kaina: <span class="fw-bold" style="color: var(--bs-orange);">{{ product.final_price }} &#8364;</span></p>
+                {% else %}
+                <p class="card-text"> Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;</span></p>
+                {% endif %}
+                {% if product.stocked %}
+                <p class="card-text fw-bold text-success"> Turime sandėlyje! </p>
+                {% endif %}
+                <a href="{% url 'product' product.pk %}" class="btn btn-success">Peržiūrėti</a>
+              </div>
+            </div>
+        </div>
+    {% endfor %}
+     </div>
+</div>
+{% if is_paginated %}
+<ul class="pagination pagination-sm justify-content-center mt-5">
+    <li><a class="page-link text-dark" href="?page=1">&laquo; Pirmas</a></li>
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+        <a class="page-link text-dark" href="?page={{ page_obj.previous_page_number }}">Ankstesnis</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link text-dark">Ankstesnis</span>
+    </li>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+    {% if page_obj.number == num %}
+    <li class="page-item active ">
+        <span class="page-link text-dark bg-success">{{ num }}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+        <a class="page-link text-dark" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+        <a class="page-link text-dark" href="?page={{ page_obj.next_page_number }}">Kitas</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link text-dark">Kitas</span>
+    </li>
+    {% endif %}
+    <li><a class="page-link text-dark" href="?page={{ page_obj.paginator.num_pages }}">Paskutinis &raquo;</a></li>
+</ul>
+{% endif %}
+{% endblock %}
+
+
+
+
+
