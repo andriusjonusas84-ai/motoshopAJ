@@ -56,14 +56,10 @@ def search(request):
                                       Q(manufacturer__icontains=query)|
                                       Q(product_category__title__icontains=query)
                                      )
-    produktu = Product.objects.filter(Q(title__icontains=query) |
-                                      Q(manufacturer__icontains=query) |
-                                      Q(product_category__title__icontains=query)
-                                      ).count()
     context = {
         "query": query,
         "products": products,
-        "produktu": produktu
+        "produktu": products.count()
     }
     return render(request, template_name="search.html",context=context)
 
