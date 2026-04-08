@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Parduotuvė - {{ category_title }}{% endblock %}
+{% block content %}
+<div class="container mb-2">
+    <nav style="--bs-breadcrumb-divider: '>'; height:25px" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ category_title }}</li>
+        </ol>
+    </nav>
+    <h2> {{ category_title }} </h2>
+</div>
+<div class="container ps-1 d-flex flex-wrap gap-3">
+   {% for product in products_category %}
+        {% include 'product_card.html' %}
+    {% endfor %}
+</div>
+{% include 'pagination_products_cbw.html' %}
+{% endblock %}
+
+
+
+
+

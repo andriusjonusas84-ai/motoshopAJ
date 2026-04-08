@@ -36,7 +36,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ['pk','title']
-
+    # prepopulated_fields = {'slug': ('title',)}
 
 
 admin.site.register(OrderLine, OrderLineAdmin)

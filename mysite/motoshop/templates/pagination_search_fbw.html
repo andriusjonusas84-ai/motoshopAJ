@@ -1,0 +1,37 @@
+{% if products.has_other_pages %}
+<ul class="pagination pagination-sm justify-content-center mt-5">
+<!--    <li><a class="rounded border-dark-subtle page-link text-dark text-center" href="?q={{ query }}&page=1">&laquo; Pirmas</a></li>-->
+    {% if products.has_previous %}
+        <li class="me-2 page-item" style="width:50px;">
+            <a class="rounded border-dark-subtle page-link text-dark text-center" href="?q={{ query }}&page={{ products.previous_page_number }}" style="text-decoration: none;">&lt;</a>
+        </li>
+    {% else %}
+        <li class="me-2 page-item disabled" style="width:50px;">
+            <span class="rounded border-dark-subtle page-link text-dark text-center">&lt;</span>
+        </li>
+    {% endif %}
+
+    {% for num in products.paginator.page_range %}
+    {% if products.number == num %}
+    <li class="me-2 page-item active" style="width:30px;">
+        <span class="rounded border-dark-subtle page-link text-dark text-center bg-success bg-opacity-50">{{ num }}</span>
+    </li>
+    {% else %}
+    <li class="me-2 page-item" style="width:30px;">
+        <a class="rounded border-dark-subtle page-link text-dark text-center" href="?q={{ query }}&page={{ num }}" style="text-decoration: none;">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
+    {% if products.has_next %}
+    <li class="me-2 page-item" style="width:50px;">
+        <a class="rounded border-dark-subtle page-link text-dark text-center" href="?q={{ query }}&page={{ products.next_page_number }}" style="text-decoration: none;">&gt;</a>
+    </li>
+    {% else %}
+    <li class="me-2 page-item disabled" style="width:50px;">
+        <span class="rounded border-dark-subtle page-link text-dark text-center">&gt;</span>
+    </li>
+    {% endif %}
+<!--    <li><a class="rounded border-dark-subtle page-link text-dark text-center" href="?q={{ query }}&page={{ products.paginator.num_pages }}">Paskutinis &raquo;</a></li>-->
+</ul>
+{% endif %}

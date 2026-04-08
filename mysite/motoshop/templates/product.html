@@ -4,6 +4,13 @@
 
 {% block content %}
 <div class="container mt-4 w-100 ">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'products_category' product.product_category.pk %}">{{ product.product_category.title }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+    </ol>
+</nav>
     <h2 class="mt-2">{{ product.title }}</h2>
     <hr>
     <div class="row">
@@ -15,15 +22,7 @@
             <h5 class="card-text fw-bold text-danger text-uppercase"> Naujiena! </h5>
             {% endif %}
             <h5 class="">Prekės kategorija:
-            {% if product.product_category.id  == 1 %}
-            <a class="text-dark fw-bold" href="{% url 'products1' %}">{{ product.product_category.title }}</a>
-            {% elif product.product_category.id  == 2 %}
-            <a class="text-dark fw-bold" href="{% url 'products2' %}">{{ product.product_category.title }}</a>
-            {% elif product.product_category.id  == 3 %}
-            <a class="text-dark fw-bold" href="{% url 'products3' %}">{{ product.product_category.title }}</a>
-            {% elif product.product_category.id  == 4 %}
-            <a class="text-dark fw-bold" href="{% url 'products4' %}">{{ product.product_category.title }}</a>
-            {% endif %}
+            <a class="text-dark" href="{% url 'products_category' product.product_category.pk %}" style="background-color: rgb(237, 242, 191)">{{ product.product_category.title }}</a>
             </h5>
             <h5 class="">Prekės kodas: {{ product.code }}</h5>
             <h5 class="mt-2">Ar turime sandelyje:
@@ -41,7 +40,7 @@
             <h5 class="">Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;<span></span></h5>
             {% endif %}
             <br><br><br><br><br><br><br><br><br>
-            <a href="#" class="mt-5 btn btn-lg btn-success">Dėti į krepšelį</a>
+            <a href="#" class="mt-5 btn btn-lg btn-success ">Dėti į krepšelį</a>
         </div>
     </div>
     <h4 class="mt-2">Prekės aprašymas</h4>

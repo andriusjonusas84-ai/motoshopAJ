@@ -3,14 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="icon" type="image/svg+xml" href="{% static '/images/adv-logo.png' %}">
     <title>{% block title %}{% endblock %}</title>
+    <style>
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          background-color: #f1f1f1;
+          z-index: 1;
+          text-align: left;
+          position: absolute;
+          right: 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+         display: block;
+         margin-top: 1px;
+          }
+
+        .dropdown-content a:hover {
+          background-color: #f1f1f1;
+        }
+        .card-img-top {
+            height: 180px; /* Set your desired fixed height */
+            object-fit: contain; /* Crops the image to fit without stretching */
+        }
+        .my-extra-rounded-card {
+            border-radius: 1rem !important; /* Adjust as needed */
+            overflow: hidden; /* Ensures child elements (like images) don't pop out of the corners */
+        }
+    </style>
   </head>
   <body>
     <div class="container-fluid mt-2 ">
@@ -18,7 +50,7 @@
         <div class="col align-self-center">
           <h5 class="">Prekių paieška</h5>
           <form class="d-flex mt-2 mb-2" method="get" action="{% url 'search' %}">
-            <input class="form-control me-2 w-70" style="width:75%" name="query" type="search" placeholder="Iveskite ieškomą prekę, kategoriją arba gamintoją">
+            <input class="form-control me-2 w-70" style="width:75%" name="q" value="{{ query }}" type="search" placeholder="Iveskite ieškomą prekę, kategoriją arba gamintoją">
             <button class="btn btn-success rounded-circle" type="submit"><i class="bi bi-search"></i></button>
           </form>
         </div>
@@ -28,31 +60,30 @@
         <div class="col text-end align-self-center">
             {% if not user.is_authenticated %}
             <img class="" src="{% static '/images/helmet.jpg' %}" alt="..." style="height:50px" >
-            <button type="button" class="btn btn-outline-success mt-3"><a href="{% url 'login' %}" class="text-dark fw-bold">Prisijungti</a></button>
-            <button type="button" class="btn btn-outline-warning mt-3"><a href="{% url 'signup' %}" class="text-dark fw-bold" >Registruotis</a></button>
+            <a href="{% url 'login' %}" class="text-dark fw-bold btn btn-outline-success mt-3">Prisijungti</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline-warning mt-3 text-dark fw-bold" >Registruotis</a>
             {% else %}
-                <div class="btn-group">
+                <div class="me-2">
                   {% if user.photo %}
-                  <img class="rounded-circle me-2" src="{{ user.photo.url }}" alt="..." style="height:50px" >
+                  <img class="rounded-circle" src="{{ user.photo.url }}" alt="..." style="height:50px" >
                   {% else %}
-                  <img class="me-2" src="{% static '/images/helmet.jpg' %}" alt="..." style="height:50px" >
+                  <img src="{% static '/images/helmet.jpg' %}" alt="..." style="height:50px" >
                   {% endif %}
-                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split fw-bold" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="visually-hidden">Toggle Dropdown</span> {{ user.username }}
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person-arms-up fs-5"></i> Mano profilis</a></li>
-                    <li><a class="dropdown-item" href="{% url 'myorders' %}"><i class="bi bi-box-seam fs-5"></i> Mano užsakymai</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-basket3 fs-5"></i> Prekių krepšelis</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-heart-fill fs-5"></i> Patinkančios prekės</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button class="dropdown-item fw-bold text-center" type="submit"><i class="bi bi-box-arrow-left fs-5"></i>  Atsijungti</button>
-                        </form>
-                    </li>
-                  </ul>
+                  <div class ="dropdown">
+                      <button class="text-dark btn btn-outline-success fw-bold">
+                          {{ user.username }}
+                      </button>
+                        <div class="dropdown-content">
+                          <a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person-arms-up fs-5"></i> Mano profilis</a>
+                          <a class="dropdown-item" href="{% url 'myorders' %}"><i class="bi bi-box-seam fs-5"></i> Mano užsakymai</a>
+                          <a class="dropdown-item" href="#"><i class="bi bi-basket3 fs-5"></i> Prekių krepšelis</a>
+                          <a class="dropdown-item" href="#"><i class="bi bi-heart-fill fs-5"></i> Patinkančios prekės</a>
+                          <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="dropdown-item fw-bold text-center" type="submit"><i class="bi bi-box-arrow-left fs-5"></i>  Atsijungti</button>
+                          </form>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </div>

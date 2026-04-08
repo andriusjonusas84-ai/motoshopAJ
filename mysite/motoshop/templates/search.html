@@ -3,52 +3,24 @@
 {% block title %}Paieška{% endblock %}
 
 {% block content %}
-<div class="container mt-4 w-75">
-    <h2 class="text-start mb-3" >Paieškos rezultatai
-    {% if produktu > 0 %}
-     <span>(rasta {{ produktu }} produktų)</span></h2>
+
+<div class="container mb-2">
+    {% if not query %}
+    <h2 class="text-start mb-2" >Visos prekės</h2>
+    {% elif produktu > 0 and query %}
+    <h2 class="text-start mb-2" >Paieškos rezultatai: ieškota <span class="fw-bold">"{{ query }}"</span>, rasta prekių ({{ produktu }})</h2>
     {% endif %}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for product in products %}
-        <div class="col">
-            <div class="card" style="width: 20rem;height: 41rem;">
-              <img class="card-img-top" src="{{ product.cover.url  }}" alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title"><a class="text-dark" href="{% url 'product' product.pk %}">{{ product.title }}</a></h5>
-                {% if product.new_product %}
-                <p class="card-text fw-bold text-danger text-uppercase"> Naujiena! </p>
-                {% endif %}
-                <p class="card-text fw-bold" style="background-color: rgb(237, 242, 191)">
-                {% if product.product_category.id  == 1 %}
-                <a class="text-dark" href="{% url 'products1' %}">{{ product.product_category.title }}</a>
-                {% elif product.product_category.id  == 2 %}
-                <a class="text-dark" href="{% url 'products2' %}">{{ product.product_category.title }}</a>
-                {% elif product.product_category.id  == 3 %}
-                <a class="text-dark" href="{% url 'products3' %}">{{ product.product_category.title }}</a>
-                {% elif product.product_category.id  == 4 %}
-                <a class="text-dark" href="{% url 'products4' %}">{{ product.product_category.title }}</a>
-                {% endif %}
-                </p>
-                {% if product.final_price < product.rrp %}
-                <p class="card-text"> Įprasta kaina: <span class="fw-bold">{{ product.rrp }} &#8364;</span></p>
-                <p class="card-text"> Pardavimo kaina: <span class="fw-bold" style="color: var(--bs-orange);">{{ product.final_price }} &#8364;</span></p>
-                {% else %}
-                <p class="card-text"> Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;</span></p>
-                {% endif %}
-                {% if product.stocked %}
-                <p class="card-text fw-bold text-success"> Turime sandėlyje! </p>
-                {% endif %}
-                <a href="{% url 'product' product.pk %}" class="btn btn-success">Peržiūrėti</a>
-              </div>
-            </div>
-        </div>
-    {% empty %}
-    <div class="alert alert-danger w-100" role="alert">
-    <h4>Nerasta prekių pagal raktažodį <span class="fw-bold">"{{ query }}"</span> , patikslinkite paieškos kriterijus</h4>
-    </div>
-    {% endfor %}
-    </div>
 </div>
+<div class="container ps-1 d-flex flex-wrap gap-3">
+    {% for product in products %}
+        {% include 'product_card.html' %}
+    {% empty %}
+        <div class="alert alert-danger w-100">
+            <h4>Nerasta prekių pagal raktažodį <span class="fw-bold">"{{ query }}"</span> , patikslinkite paieškos kriterijus</h4>
+        </div>
+    {% endfor %}
+</div>
+{% include 'pagination_search_fbw.html' %}
 {% endblock %}
 
 

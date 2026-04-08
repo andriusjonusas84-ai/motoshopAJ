@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from PIL import Image
-from django import forms
-from django.views import generic
 from tinymce.models import HTMLField
 from smart_selects.db_fields import ChainedForeignKey
+import math
+from django.utils.text import slugify
+from django import forms
+from django.views import generic
 
 
 
@@ -34,6 +36,15 @@ class CustomUser(AbstractUser):
 
 class ProductCategory(models.Model):
     title = models.CharField(verbose_name='Kategorija')
+    # slug = models.SlugField(max_length=150,
+    #                         unique=True,
+    #                         blank=True)
+    #
+    # def save(self, *args, **kwargs):
+    #     # Automatically generate the slug from the name if it doesn't exist
+    #     if not self.slug:
+    #         self.slug = slugify(self.title)
+    #     super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Kategorija'
@@ -89,19 +100,27 @@ class Product(models.Model):
                               upload_to='product_covers',
                               null=True,
                               blank=True)
+    def rrp_integer(self):
+        return int(self.rrp)
 
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     if self.cover:
-    #         img = Image.open(self.cover.path)
-    #         min_side = min(img.width, img.height)
-    #         left = (img.width - min_side) // 2
-    #         top = (img.height - min_side) // 2
-    #         right = left + min_side
-    #         bottom = top + min_side
-    #         img = img.crop((left, top, right, bottom))
-    #         img = img.resize((300, 300), Image.LANCZOS)
-    #         img.save(self.cover.path)
+    def rrp_decimal(self):
+        parts = math.modf(self.rrp)
+        if round(parts[0], 2) == 0:
+            b = str('00')
+        else:
+            b = str(round(parts[0], 2)).split('.')[1]
+        return b
+
+    def final_price_integer(self):
+        return int(self.final_price)
+
+    def final_price_decimal(self):
+        parts = math.modf(self.final_price)
+        if round(parts[0], 2) == 0:
+            b = str('00')
+        else:
+            b = str(round(parts[0], 2)).split('.')[1]
+        return b
 
     class Meta:
         verbose_name = 'Prekė'
