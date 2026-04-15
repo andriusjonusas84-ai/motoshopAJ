@@ -36,15 +36,6 @@ class CustomUser(AbstractUser):
 
 class ProductCategory(models.Model):
     title = models.CharField(verbose_name='Kategorija')
-    # slug = models.SlugField(max_length=150,
-    #                         unique=True,
-    #                         blank=True)
-    #
-    # def save(self, *args, **kwargs):
-    #     # Automatically generate the slug from the name if it doesn't exist
-    #     if not self.slug:
-    #         self.slug = slugify(self.title)
-    #     super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Kategorija'

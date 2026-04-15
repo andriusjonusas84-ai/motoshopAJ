@@ -4,23 +4,24 @@ from django.shortcuts import render, reverse, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import FormMixin
-from .forms import CustomUserCreationForm, ProductReviewForm
 from django.core.paginator import Paginator
-from django.views.generic import CreateView
-from django.contrib import messages
-from django import forms
-from .models import CustomUser, Product, Order, OrderLine, Post, Comment, ProductCategory
+from .models import CustomUser, Product, Order, OrderLine, ProductCategory
+from .filters import ProductFilter
+from django_filters.views import FilterView
+from .forms import CustomUserCreationForm, ProductReviewForm
 
 
 def index(request):
+    products = Product.objects.count()
     context = {
-        'products':Product.objects.count()
+        'products': products,
     }
     return render(request,'index.html',context=context)
 
 def repair(request):
     context = {
-        'products':Product.objects.count()
+        'products':Product.objects.count(),
+        'form': ProductFilterForm()
     }
     return render(request,'repair.html',context=context)
 
@@ -101,11 +102,13 @@ class OrderDetailView(generic.DetailView):
     template_name = 'order.html'
     context_object_name = 'order'
 
-class ProductListView(generic.ListView):
+class ProductListView(FilterView):
     model = Product
+    filterset_class = ProductFilter
     template_name = 'products.html'
     context_object_name = 'products'
     paginate_by = 10
+
 
 class ProductCategoryListView(generic.ListView):
     model = Product
@@ -146,3 +149,7 @@ class OrderLineDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Delet
 
     def test_func(self):
         return Order.objects.get(pk=self.get_object().order.pk).client == self.request.user
+
+def product_list(request):
+    f = ProductFilter(request.GET, queryset=Product.objects.all())
+    return render(request, 'products.html', {'filter': f})

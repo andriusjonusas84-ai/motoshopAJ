@@ -9,45 +9,15 @@
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="icon" type="image/svg+xml" href="{% static '/images/adv-logo.png' %}">
+    <link class="rounded" rel="icon" type="image/svg+xml" href="{% static '/images/adv-logo-nobg.png' %}">
     <title>{% block title %}{% endblock %}</title>
     <style>
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-
-        .dropdown-content {
-          display: none;
-          background-color: #f1f1f1;
-          z-index: 1;
-          text-align: left;
-          position: absolute;
-          right: 0;
-        }
-
-        .dropdown:hover .dropdown-content {
-         display: block;
-         margin-top: 1px;
-          }
-
-        .dropdown-content a:hover {
-          background-color: #f1f1f1;
-        }
-        .card-img-top {
-            height: 180px; /* Set your desired fixed height */
-            object-fit: contain; /* Crops the image to fit without stretching */
-        }
-        .my-extra-rounded-card {
-            border-radius: 1rem !important; /* Adjust as needed */
-            overflow: hidden; /* Ensures child elements (like images) don't pop out of the corners */
-        }
     </style>
   </head>
   <body>
-    <div class="container-fluid mt-2 ">
-      <div class="row mt-2">
-        <div class="col align-self-center">
+    <div class="container-fluid bg-light">
+      <div class="row">
+        <div class="col align-self-center ps-4">
           <h5 class="">Prekių paieška</h5>
           <form class="d-flex mt-2 mb-2" method="get" action="{% url 'search' %}">
             <input class="form-control me-2 w-70" style="width:75%" name="q" value="{{ query }}" type="search" placeholder="Iveskite ieškomą prekę, kategoriją arba gamintoją">
@@ -55,19 +25,19 @@
           </form>
         </div>
         <div class="col align-self-center text-center">
-          <a href="{% url 'index' %}"><img class="rounded-circle" src="{% static 'images/ajmotoshop.png' %}" alt="..." style="height:180px" ></a>
+          <a href="{% url 'index' %}"><img class="rounded-circle" src="{% static 'images/ajmotoshop.png' %}" alt="..." style="height:160px" ></a>
         </div>
         <div class="col text-end align-self-center">
             {% if not user.is_authenticated %}
-            <img class="" src="{% static '/images/helmet.jpg' %}" alt="..." style="height:50px" >
+            <img class="" src="{% static '/images/helmet2nobg.png' %}" alt="..." style="height:50px" >
             <a href="{% url 'login' %}" class="text-dark fw-bold btn btn-outline-success mt-3">Prisijungti</a>
-            <a href="{% url 'signup' %}" class="btn btn-outline-warning mt-3 text-dark fw-bold" >Registruotis</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline-warning border-success mt-3 text-dark fw-bold" >Registruotis</a>
             {% else %}
                 <div class="me-2">
                   {% if user.photo %}
                   <img class="rounded-circle" src="{{ user.photo.url }}" alt="..." style="height:50px" >
                   {% else %}
-                  <img src="{% static '/images/helmet.jpg' %}" alt="..." style="height:50px" >
+                  <img src="{% static '/images/helmet2nobg.png' %}" alt="..." style="height:50px" >
                   {% endif %}
                   <div class ="dropdown">
                       <button class="text-dark btn btn-outline-success fw-bold">
@@ -78,9 +48,9 @@
                           <a class="dropdown-item" href="{% url 'myorders' %}"><i class="bi bi-box-seam fs-5"></i> Mano užsakymai</a>
                           <a class="dropdown-item" href="#"><i class="bi bi-basket3 fs-5"></i> Prekių krepšelis</a>
                           <a class="dropdown-item" href="#"><i class="bi bi-heart-fill fs-5"></i> Patinkančios prekės</a>
-                          <form method="post" action="{% url 'logout' %}">
+                          <form method="post" action="{% url 'logout' %}" id="my-form">
                             {% csrf_token %}
-                            <button class="dropdown-item fw-bold text-center" type="submit"><i class="bi bi-box-arrow-left fs-5"></i>  Atsijungti</button>
+                          <a class="dropdown-item text-center fw-bold" href="#" onclick="document.getElementById('my-form').submit(); return false;"><i class="bi bi-box-arrow-left fs-5"></i>  Atsijungti</a>
                           </form>
                         </div>
                     </div>
@@ -90,7 +60,7 @@
       </div>
     </div>
     {% include 'navbar.html' %}
-    <div class="container-fluid mt-2">
+    <div class="container-fluid">
     {% block content %}{% endblock %}
     </div>
    <footer class="container-fluid p-1 fixed-bottom">
@@ -101,14 +71,13 @@
                 <a href="#" class="fw-bold text-dark me-3">Grąžinimas ir garantinis taisymas</a>
                 <a href="#" class="fw-bold text-dark">Kontaktai</a>
             </div>
-            <div class="col text-center" style="background-color: rgb(233,240,235);">
+            <div class="col text-center">
                 <p class="">&copy AJ motociklai {% now "Y-m-d" %}
 <!--                <span style="background-color: rgb(233,240,235);"><img class="center-img" src="{% static 'images/adv-logo.png' %}" alt="..." style="height:30px" ></span>-->
                 </p>
             </div>
             <div class="col-5 text-center">
                 <span class="fw-bold fs-5 text-dark me-3">Sekite mus:</span>
-<!--                <img class="center-img" src="{% static 'images/adv-logo.png' %}" alt="..." style="height:30px" >-->
                 <a href="https://www.facebook.com" target="_blank" class="fw-bold fs-4 text-dark me-4"><i class="bi bi-facebook"></i></a>
                 <a href="https://www.instagram.com" target="_blank" class="fw-bold fs-4 text-dark me-4"><i class="bi bi-instagram"></i></a>
                 <a href="https://www.linkedin.com" target="_blank" class="fw-bold fs-4 text-dark me-4"><i class="bi bi-linkedin"></i></a>

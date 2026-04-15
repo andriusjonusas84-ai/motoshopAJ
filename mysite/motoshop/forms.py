@@ -1,7 +1,5 @@
-from tokenize import Comment
-
 from django.contrib.auth.forms import UserCreationForm
-from .models import  CustomUser,Order,Product,OrderLine,ProductCategory,ProductReview
+from .models import  CustomUser,ProductReview
 from django import forms
 
 class CustomUserCreationForm(UserCreationForm):
@@ -9,8 +7,10 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ['username', 'password1', 'password2']
 
-
 class ProductReviewForm(forms.ModelForm):
     class Meta:
         model = ProductReview
         fields = ['content']
+
+class ProductFilterForm(forms.Form):
+    title = forms.CharField()

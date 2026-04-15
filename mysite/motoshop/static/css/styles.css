@@ -1,29 +1,99 @@
+footer {
+    background-color: var(--bs-success-bg-subtle);
+    height: 60px;
+}
+
 body {
   /* Match this to your footer's height */
-  padding-bottom: 70px;
+    padding-bottom: 70px;
 }
 
 a {
-text-decoration: none;
+    text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
-}
-
-footer {
-    background-color: rgb(233,240,235);
-    color:black;
-    height: 60px
+    text-decoration: underline;
 }
 
 aside {
-  width: 30%;
-  padding-left: 15px;
-  margin-left: 15px;
-  float: right;
+    width: 30%;
+    padding-left: 15px;
+    margin-left: 15px;
+    float: right;
 }
 
-img.logo {
-  mix-blend-mode: multiply;
+.my-extra-rounded-card {
+    border-radius: 1rem !important; /* Adjust as needed */
+    overflow: hidden; /* Ensures child elements (like images) don't pop out of the corners */
+    width: 15rem;
+    height: 27rem;
 }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;  /*to not show dropdown items*/
+    z-index: 1; /*to show dropdown content on top of objects*/
+    text-align: left;
+    position: absolute; /*just drops down content*/
+    right: 0;
+    width: 180px;
+    border-radius: 8px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    background-color: #fff;
+    margin-top: 5px;
+}
+
+.dropdown-content a {
+  display: block;        /* Makes the link take the full width [16, 17] */
+  padding: 10px 10px;    /* Adds space so the link is easier to click */
+  text-decoration: none; /* Removes the underline */
+  color: black;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s;
+}
+
+.dropdown-content::before {
+  content: "";
+  position: absolute;
+  top: -5px; /* Match this to the size of your gap */
+  left: 0;
+  right: 0;
+  height: 20px;
+  display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #b2d8d8;
+}
+
+.card-img-top {
+    height: 180px; /* Set your desired fixed height */
+    object-fit: contain; /* Crops the image to fit without stretching */
+}
+
+.container-fluid {
+    margin: 0;
+    padding: 0px;
+}
+
+.grid-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 15% auto 10%;
+    grid-gap: 5px;
+    padding: 5px;
+    border: 0px solid black;
+}
+
+.grid-container div {
+}
+

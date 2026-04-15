@@ -3,7 +3,7 @@
 <!--    <li><a class="rounded border-dark-subtle page-link text-dark text-center" href="?page=1">&laquo; Pirmas</a></li>-->
     {% if page_obj.has_previous %}
     <li class="me-2 page-item" style="width:50px;">
-        <a class="rounded border-dark-subtle page-link text-dark text-center" href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none;">&lt;</a>
+        <a class="rounded border-dark-subtle page-link text-dark text-center" href="{% querystring page=page_obj.previous_page_number %}" style="text-decoration: none;">&lt;</a>
     </li>
     {% else %}
     <li class="me-2 page-item disabled" style="width:50px;">
@@ -18,14 +18,14 @@
     </li>
     {% else %}
     <li class="me-2 page-item" style="width:30px;">
-        <a class="rounded border-dark-subtle page-link text-dark text-center" href="?page={{ num }}" style="text-decoration: none;">{{ num }}</a>
+        <a class="rounded border-dark-subtle page-link text-dark text-center" href="{% querystring page=page_obj.number %}" style="text-decoration: none;">{{ num }}</a>
     </li>
     {% endif %}
     {% endfor %}
 
     {% if page_obj.has_next %}
     <li class="page-item" style="width:50px;">
-        <a class="rounded border-dark-subtle page-link text-dark text-center" href="?page={{ page_obj.next_page_number }}" style="text-decoration: none;">&gt;</a>
+        <a class="rounded border-dark-subtle page-link text-dark text-center" href="{% querystring page=page_obj.next_page_number %}" style="text-decoration: none;">&gt;</a>
     </li>
     {% else %}
     <li class="page-item disabled" style="width:50px;">

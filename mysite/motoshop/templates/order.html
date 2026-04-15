@@ -12,7 +12,7 @@
             <p class="text-start text-uppercase fw-bold {% if order.status == '6' %}text-success{% endif %}">{{ order.get_status_display }}</p>
         </div>
         <div class="col text-end">
-            <button type="button" class="btn btn-success mt-2"><a href="{% url 'myorders' %}" class="text-white">Grįžti į užsakymų sąrašą</a></button>
+            <a class="btn btn-success text-white mt-2" href="{% url 'myorders' %}" class="">Grįžti į užsakymų sąrašą</a>
         </div>
     </div>
 
