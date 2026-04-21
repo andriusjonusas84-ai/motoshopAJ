@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'motoshop',
     'tinymce',
     'smart_selects',
+    'django_select2',
     'crispy_forms',
     'sass_processor',
     'crispy_bootstrap5',
@@ -186,3 +187,18 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
 ]
+
+SELECT2_CACHE_BACKEND = "default"
+
+def FILTERS_VERBOSE_LOOKUPS():
+    from django_filters.conf import DEFAULTS
+    # Copy the default lookup mapping
+    verbose_lookups = DEFAULTS['VERBOSE_LOOKUPS'].copy()
+    # Map 'icontains' and others to an empty string to hide them in labels
+    verbose_lookups.update({
+        'exact': '',
+        'iexact': '',
+        'contains': '',
+        'icontains': '',
+    })
+    return verbose_lookups

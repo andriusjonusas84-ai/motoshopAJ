@@ -18,7 +18,7 @@
     </li>
     {% else %}
     <li class="me-2 page-item" style="width:30px;">
-        <a class="rounded border-dark-subtle page-link text-dark text-center" href="{% querystring page=page_obj.number %}" style="text-decoration: none;">{{ num }}</a>
+        <a class="rounded border-dark-subtle page-link text-dark text-center" href="{% querystring page=num %}" style="text-decoration: none;">{{ num }}</a>
     </li>
     {% endif %}
     {% endfor %}
