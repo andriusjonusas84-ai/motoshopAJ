@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    overflow-y: auto; /*creates fake vertical scrollbar*/
 }
 
 body {
@@ -8,6 +9,8 @@ body {
     flex-direction: column;
     margin: 0;
     overflow-x: hidden;
+    min-height: 100%;
+    overflow-y: scroll;
 }
 
 main {
@@ -21,6 +24,7 @@ main {
 footer {
     background-color: var(--bs-success-bg-subtle);
     height: 60px;
+    margin-top: 20px;
 }
 
 .container-fluid {
@@ -100,7 +104,6 @@ aside {
     object-fit: contain; /* Crops the image to fit without stretching */
 }
 
-
 .grid-container {
     width: 100%;
     display: grid;
@@ -110,8 +113,10 @@ aside {
     border: 0px solid;
 }
 
-.grid-container div {
+p {
+    margin-bottom: 5px ;
 }
+
 
 
 

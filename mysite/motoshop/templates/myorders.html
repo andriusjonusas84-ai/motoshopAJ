@@ -3,7 +3,7 @@
 {% block title %}Mano užsakymai{% endblock %}
 
 {% block content %}
-<div class="container mt-4 w-50">
+<div class="container mt-3 w-50">
     <h2 class="text-start mb-3" >Mano užsakymai</h2>
     {% for order in orders %}
     <div class ="row mb-4" style="background-color: rgb(233,240,235)">
@@ -23,7 +23,7 @@
             <p>Suma</p>
             <p class="fw-bold">{{ order.order_sum }} &#8364; </p>
         </div>
-        <div class="col p-3 align-self-center">
+        <div class="col p-3 align-self-center text-center">
             <a class="btn btn-success text-white" href="{% url 'order' order.pk %}">Peržiūrėti <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>

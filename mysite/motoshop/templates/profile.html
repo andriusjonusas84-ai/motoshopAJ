@@ -3,21 +3,17 @@
 {% block title %}Profilis{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-3">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            {% if user.photo %}
-            <img src="{{ user.photo.url }}" class="rounded-circle" alt="" style="width:200px">
-            {% endif %}
-            <h2 class="text-center mb-1" >Kliento duomenys</h2>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% load crispy_forms_tags %}
-                {{ form | crispy }}
-                <button class="btn btn-success w-100" type="submit">Išsaugoti</button>
-            </form>
-        </div>
-    </div>
+<div class="container mt-3 w-25 justify-content-center">
+    {% if user.photo %}
+    <img src="{{ user.photo.url }}" class="rounded-circle" alt="" style="width:200px">
+    {% endif %}
+    <h2 class="text-center mb-1" >Kliento duomenys</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        {{ form | crispy }}
+        <button class="btn btn-success w-100" type="submit">Išsaugoti</button>
+    </form>
 </div>
 {% endblock %}
 

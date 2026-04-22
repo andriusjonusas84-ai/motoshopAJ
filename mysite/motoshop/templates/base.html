@@ -22,20 +22,20 @@
             <div class="col align-self-center ps-4">
               <h5 class="">Prekių paieška</h5>
               <form class="d-flex mt-2 mb-2" method="get" action="{% url 'search' %}">
-                <input class="form-control me-2 w-70" style="width:75%" name="q" value="{{ query }}" type="search" placeholder="Iveskite ieškomą prekę, kategoriją arba gamintoją">
+                <input class="form-control me-2 w-75" name="q" value="{{ query }}" type="search" placeholder="Iveskite ieškomą prekę, kategoriją arba gamintoją">
                 <button class="btn btn-success rounded-circle" type="submit"><i class="bi bi-search"></i></button>
               </form>
             </div>
             <div class="col align-self-center text-center">
               <a href="{% url 'index' %}"><img class="rounded-circle" src="{% static 'images/ajmotoshop.png' %}" alt="..." style="height:160px" ></a>
             </div>
-            <div class="col text-end align-self-center me-2">
+            <div class="col text-end align-self-center">
                 {% if not user.is_authenticated %}
-                <img class="" src="{% static '/images/helmet2nobg.png' %}" alt="..." style="height:50px" >
-                <a href="{% url 'login' %}" class="text-dark fw-bold btn btn-outline-success mt-3">Prisijungti</a>
-                <a href="{% url 'signup' %}" class="btn btn-outline-warning border-success mt-3 text-dark fw-bold" >Registruotis</a>
+                <img class="mb-2" src="{% static '/images/helmet2nobg.png' %}" alt="..." style="height:50px" >
+                <a href="{% url 'login' %}" class="btn btn-outline-success text-dark fw-bold me-1">Prisijungti</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-warning border-success text-dark fw-bold" >Registruotis</a>
                 {% else %}
-                    <div class="me-2">
+                    <div class="">
                       {% if user.photo %}
                       <img class="rounded-circle" src="{{ user.photo.url }}" alt="..." style="height:50px" >
                       {% else %}
@@ -66,18 +66,18 @@
     </main>
    <footer>
        <div class="row mt-2">
-            <div class="col-5 text-center">
+            <div class="col-5 text-center align-self-center">
                 <a href="#" class="fw-bold text-dark me-3">Pristatymas</a>
                 <a href="#" class="fw-bold text-dark me-3">Atsiskaitymas</a>
                 <a href="#" class="fw-bold text-dark me-3">Grąžinimas ir garantinis taisymas</a>
                 <a href="#" class="fw-bold text-dark">Kontaktai</a>
             </div>
-            <div class="col text-center">
-                <p class="">&copy AJ motociklai {% now "Y-m-d" %}
+            <div class="col align-self-center">
+                <p class="text-center">&copy AJ motociklai {% now "Y-m-d" %}
 <!--                <span style="background-color: rgb(233,240,235);"><img class="center-img" src="{% static 'images/adv-logo.png' %}" alt="..." style="height:30px" ></span>-->
                 </p>
             </div>
-            <div class="col-5 text-center">
+            <div class="col-5 text-center align-self-center">
                 <span class="fw-bold fs-5 text-dark me-3">Sekite mus:</span>
                 <a href="https://www.facebook.com" target="_blank" class="fw-bold fs-4 text-dark me-4"><i class="bi bi-facebook"></i></a>
                 <a href="https://www.instagram.com" target="_blank" class="fw-bold fs-4 text-dark me-4"><i class="bi bi-instagram"></i></a>
