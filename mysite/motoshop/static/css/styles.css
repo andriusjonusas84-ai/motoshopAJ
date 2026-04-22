@@ -1,11 +1,31 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar {
+    background-color: var(--bs-success-bg-subtle);
+}
+
 footer {
     background-color: var(--bs-success-bg-subtle);
     height: 60px;
 }
 
-body {
-  /* Match this to your footer's height */
-    padding-bottom: 70px;
+.container-fluid {
+    margin: 0;
+    padding: 0px;
 }
 
 a {
@@ -80,10 +100,6 @@ aside {
     object-fit: contain; /* Crops the image to fit without stretching */
 }
 
-.container-fluid {
-    margin: 0;
-    padding: 0px;
-}
 
 .grid-container {
     width: 100%;
@@ -91,9 +107,11 @@ aside {
     grid-template-columns: 15% auto 10%;
     grid-gap: 5px;
     padding: 5px;
-    border: 0px solid black;
+    border: 0px solid;
 }
 
 .grid-container div {
 }
+
+
 

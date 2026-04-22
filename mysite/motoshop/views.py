@@ -21,7 +21,6 @@ def index(request):
 def repair(request):
     context = {
         'products':Product.objects.count(),
-        'form': ProductFilterForm()
     }
     return render(request,'repair.html',context=context)
 
