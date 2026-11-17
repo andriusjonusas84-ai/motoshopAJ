@@ -24,7 +24,7 @@
             <p class="fw-bold">{{ order.order_sum }} &#8364; </p>
         </div>
         <div class="col p-3 align-self-center text-center">
-            <a class="btn btn-success text-white" href="{% url 'order' order.pk %}">Peržiūrėti <i class="bi bi-arrow-right"></i></a>
+            <a class="btn btn-success text-white no-underline" href="{% url 'order' order.pk %}">Peržiūrėti <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
     {% empty %}

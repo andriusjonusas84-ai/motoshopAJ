@@ -6,19 +6,39 @@
 
 <div class="container mb-2">
     {% if not query %}
-    <h2 class="text-start mb-2" >Visos prekės</h2>
     {% elif produktu > 0 and query %}
-    <h2 class="text-start mb-2" >Paieškos rezultatai: ieškota <span class="fw-bold">"{{ query }}"</span>, rasta prekių ({{ produktu }})</h2>
+    <h2 class="text-start mt-3 mb-3">Paieškos rezultatai: ieškota <span class="fw-bold">"{{ query }}"</span>, rasta
+        prekių ({{ produktu }})</h2>
     {% endif %}
 </div>
-<div class="container ps-1 d-flex flex-wrap gap-3">
-    {% for product in products %}
-        {% include 'product_card.html' %}
-    {% empty %}
-        <div class="alert alert-danger w-100">
-            <h4>Nerasta prekių pagal raktažodį <span class="fw-bold">"{{ query }}"</span> , patikslinkite paieškos kriterijus</h4>
+<div class="container-fluid grid-container pt-3">
+    {% include 'product_filters.html' %}
+    <div class="">
+        {% if active_filters %}
+        <div class="active-filters mb-3">
+            {% for f in active_filters %}
+            <div class="filter-row">
+                <span>{{ f.label }} </span>
+                {% for val, link in f.pairs %}
+                <span class="filter-badge">
+                                {{ val }}
+                                <a href="{{ link }}">×</a>
+                            </span>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <a class="btn btn-warning" href="{% url 'products' %}">Išvalyti filtrus</a>
         </div>
-    {% endfor %}
+        {% endif %}
+
+        <div class="product-grid">
+            {% for product in products %}
+            {% include 'product_card.html' %}
+            {% empty %}
+            <h5>Nerasta produktų pagal tokius filtrus, pakoreguokite pasirinkimus.</h5>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% include 'pagination_search_fbw.html' %}
 {% endblock %}

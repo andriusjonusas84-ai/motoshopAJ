@@ -5,34 +5,40 @@
 {% block content %}
 <div class="container mt-4 w-100 ">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'products_category' product.product_category.pk %}">{{ product.product_category.title }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
-    </ol>
-</nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products_category' product.product_category.pk %}">
+                {{ product.product_category.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+        </ol>
+    </nav>
     <h2 class="mt-2">{{ product.title }}</h2>
     <hr>
     <div class="row">
         <div class="col">
-            <p class="text-start mt-2" ><img class="" src="{{ product.cover.url  }}" alt="..." style="height:500px"></p>
+            <p class="text-start mt-2"><img class="" src="{{ product.cover.url  }}" alt="..." style="height:500px"></p>
         </div>
         <div class="col text-start">
             {% if product.new_product %}
             <h5 class="card-text fw-bold text-danger text-uppercase"> Naujiena! </h5>
             {% endif %}
             <h5 class="">Prekės kategorija:
-            <a class="text-dark" href="{% url 'products_category' product.product_category.pk %}" style="background-color: rgb(237, 242, 191)">{{ product.product_category.title }}</a>
+                <a class="" href="{% url 'products_category' product.product_category.pk %}">
+                    {{ product.product_category.title }}</a>
             </h5>
             <h5 class="">Prekės kodas: {{ product.code }}</h5>
             <h5 class="mt-2">Ar turime sandelyje:
-            {% if product.stocked %}
-            <span class="fw-bold text-success">Taip</span>
-            {% else %}
-            <span>Ne</span>
-            {% endif %}
+                {% if product.stocked %}
+                <span class="fw-bold text-success">Taip</span>
+                {% else %}
+                <span>Ne</span>
+                {% endif %}
             </h5>
-            <h5 class="">Sandėlio/tiekėjo likutis: {{ product.stock_quantity }} vnt.</h5>
+            {% if product.stocked %}
+            <h5 class="">Sandėlio likutis: {{ product.stock_quantity }} vnt.</h5>
+            {% else %}
+            <h5 class="">Tiekėjo likutis: {{ product.stock_quantity }} vnt.</h5>
+            {% endif %}
             {% if product.final_price < product.rrp %}
             <h5 class="">Įprasta kaina: {{ product.rrp }} &#8364;</h5>
             <h5 class="fw-bold" style="color: var(--bs-orange);">Pardavimo kaina: {{ product.final_price }} &#8364;</h5>
@@ -40,7 +46,9 @@
             <h5 class="">Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;<span></span></h5>
             {% endif %}
             <br><br><br><br><br><br><br><br><br>
-            <a href="#" class="mt-5 btn btn-lg btn-success ">Dėti į krepšelį</a>
+            <div class="text-center">
+            <a href="#" class="mt-5 btn btn-lg btn-success no-underline" style="width: 300px;"><i class="bi bi-cart2 fs-5"></i> Į krepšelį</a>
+            </div>
         </div>
     </div>
     <h4 class="mt-2">Prekės aprašymas</h4>
@@ -51,11 +59,11 @@
     <h2 class="mb-3">Prekės komentarai</h2>
     {% for review in product.reviews.all %}
     <p>{% if review.author.photo %}
-    <img src="{{ review.author.photo.url }}" class="rounded-circle" style="width:30px">
-    {% else %}
-    <img class="rounded-circle" src="{% static '/images/helmet.jpg' %}" alt="..." style="width:30px" >
-    {% endif %}
-    <strong> {{ review.author }} </strong><em>{{ review.created }}</em></p>
+        <img src="{{ review.author.photo.url }}" class="rounded-circle" style="width:30px">
+        {% else %}
+        <img class="rounded-circle" src="{% static '/images/helmet.jpg' %}" alt="..." style="width:30px">
+        {% endif %}
+        <strong> {{ review.author }} </strong><em>{{ review.created }}</em></p>
     <p>{{ review.content }}</p>
     <hr>
     {% empty %}
@@ -66,11 +74,10 @@
         {% csrf_token %}
         {% load crispy_forms_tags %}
         {{ form | crispy }}
-        <button type="submit" class="btn btn-warning">Paskelbti</button>
+        <button type="submit" class="btn btn-warning fw-bold">Paskelbti</button>
     </form>
     {% endif %}
 </div>
-
 
 
 {% endblock %}

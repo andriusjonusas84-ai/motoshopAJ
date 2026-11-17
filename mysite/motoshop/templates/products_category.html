@@ -1,21 +1,46 @@
 {% extends 'base.html' %}
 
 {% block title %}Parduotuvė - {{ category_title }}{% endblock %}
+
 {% block content %}
-<div class="container mb-2 mt-2">
-    <nav style="--bs-breadcrumb-divider: '>'; height:25px" aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ category_title }}</li>
-        </ol>
-    </nav>
-    <h2> {{ category_title }} </h2>
+<div class="container-fluid grid-container pt-3">
+    {% include 'product_filters.html' %}
+    <div class="">
+        <div class=" ">
+            <nav style="--bs-breadcrumb-divider: '>'; height:25px" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ category_title }}</li>
+                </ol>
+            </nav>
+        </div>
+        {% if paginator.count %}
+            <h2>{{ category_title }} ( {{ paginator.count }} )</h2>
+        {% else %}
+                <h2>{{ category_title }} : prekių pagal pasirinktus filtrus nėra, pakoreguokite filtrus</h2>
+        {% endif %}
+        {% if active_filters %}
+        <div class="active-filters mb-3">
+            {% for f in active_filters %}
+            <div class="filter-row">
+                <span>{{ f.label }} </span>
+                {% for val, link in f.pairs %}
+                <span class="filter-badge"> {{ val }}<a href="{{ link }}">×</a></span>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <a class="btn btn-warning" href="{{ request.path }}">Išvalyti filtrus</a>
+        </div>
+        {% endif %}
+
+        <div class="product-grid">
+            {% for product in products %}
+            {% include 'product_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
 </div>
-<div class="container ps-1 d-flex flex-wrap gap-3">
-   {% for product in products_category %}
-        {% include 'product_card.html' %}
-    {% endfor %}
-</div>
+
 {% include 'pagination_products_cbw.html' %}
 {% endblock %}
 

@@ -1,10 +1,11 @@
+import math
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Max, Min
 from django.shortcuts import render, reverse, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import FormMixin
-from django.core.paginator import Paginator
 from .models import CustomUser, Product, Order, OrderLine, ProductCategory
 from .filters import ProductFilter
 from django_filters.views import FilterView
@@ -50,29 +51,6 @@ class ProductDetailView(FormMixin,generic.DetailView):
         form.save()
         return super().form_valid(form)
 
-def search(request):
-    query = request.GET.get('q','')
-    if not query:
-        return redirect('products')
-    products = Product.objects.filter(Q(title__icontains=query)|
-                                      Q(manufacturer__icontains=query)|
-                                      Q(product_category__title__icontains=query)
-                                     )
-    produktu = Product.objects.filter(Q(title__icontains=query) |
-                                      Q(manufacturer__icontains=query) |
-                                      Q(product_category__title__icontains=query)
-                                      ).count()
-    paginator = Paginator(products, 10)
-    page_number = request.GET.get('page')
-    products = paginator.get_page(page_number)
-    context = {
-        "query": query,
-        "products": products,
-        "produktu": produktu,
-    }
-    return render(request, template_name="search.html",context=context)
-
-
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
     template_name = 'signup.html'
@@ -106,26 +84,154 @@ class ProductListView(FilterView):
     filterset_class = ProductFilter
     template_name = 'products.html'
     context_object_name = 'products'
+    ordering = 'pk'
+
     paginate_by = 10
 
+    def get(self, request, *args, **kwargs):
+        original = request.GET
+        cleaned = original.copy()
 
-class ProductCategoryListView(generic.ListView):
-    model = Product
-    template_name = 'products_category.html'
-    context_object_name = 'products_category'
-    paginate_by = 10
+        # 1. Remove empty values for ALL fields
+        for key in list(cleaned.keys()):
+            if cleaned.get(key) in ("", None):
+                cleaned.pop(key)
 
-    def get_queryset(self):
-        # Access the 'category_id' from the URL parameters
-        category_id = self.kwargs.get('product_category')
-        # Filter the Product objects by the foreign key field 'category'
-        return Product.objects.filter(product_category = category_id)
+        # 2. Detect browser refresh
+        cache_control = request.META.get("HTTP_CACHE_CONTROL", "")
+        pragma = request.META.get("HTTP_PRAGMA", "")
+
+        is_refresh = (
+                "max-age=0" in cache_control
+                or "no-cache" in cache_control
+                or "no-cache" in pragma
+        )
+
+        if is_refresh and original:
+            return redirect(request.path)
+
+        # 3. Redirect ONLY if empty params were removed
+        #    (Do NOT redirect when slider values exist)
+        if original and original != cleaned:
+            query = cleaned.urlencode()
+            return redirect(f"{request.path}?{query}" if query else request.path)
+
+        # 4. Normal processing
+        return super().get(request, *args, **kwargs)
+
+    def facet_queryset(self, filterset, exclude):
+        # Prekės, atfiltruotos pagal visus filtrus, IŠSKYRUS nurodytus exclude sąraše
+        data = filterset.data.copy()
+        for name in exclude:
+            data.pop(name, None)
+        return self.filterset_class(data, queryset=self.get_queryset()).qs
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category_id = self.kwargs.get('product_category')
-        context['category_title'] = ProductCategory.objects.get(pk = category_id).title
+        filterset = context["filter"]
+        current_params = filterset.data.copy()
+
+        price_qs = self.facet_queryset(filterset, ["final_price_0", "final_price_1"])
+        prices = price_qs.aggregate(Min("final_price"), Max("final_price"))
+        min_price = math.floor(prices["final_price__min"] or 0)
+        max_price = math.ceil(prices["final_price__max"] or 0)
+        if max_price <= min_price:
+            max_price = min_price + 1
+
+        active_filters = []
+
+        BOOLEAN_LABELS = {
+            "true": "Taip",
+            "false": "Ne",
+            "on": "Taip",
+        }
+
+        # Loop through filter fields IN ORDER
+        for name, field in filterset.form.fields.items():
+
+            # Special handling for price slider
+            if name == "final_price":
+                fp0 = self.request.GET.get("final_price_0")
+                fp1 = self.request.GET.get("final_price_1")
+
+                if fp0 and fp1:
+                    new_params = current_params.copy()
+                    new_params.pop("final_price_0", None)
+                    new_params.pop("final_price_1", None)
+                    remove_link = "?" + new_params.urlencode()
+
+                    active_filters.append({
+                        "label": "Pardavimo kaina",
+                        "pairs": [(f"{fp0} – {fp1}", remove_link)],
+                    })
+
+                continue
+
+            # Normal filters
+            raw_values = current_params.getlist(name)
+            raw_values = [v for v in raw_values if v]
+
+            if not raw_values:
+                continue
+
+            label = field.label or name.replace("_", " ").title()
+
+            display_values = []
+            for v in raw_values:
+                if v in BOOLEAN_LABELS:
+                    display_values.append(BOOLEAN_LABELS[v])
+                    continue
+
+                try:
+                    display_values.append(str(field.queryset.get(pk=v)))
+                except:
+                    display_values.append(v)
+
+            pairs = []
+            for v, display in zip(raw_values, display_values):
+                new_params = current_params.copy()
+                vals = new_params.getlist(name)
+                vals.remove(v)
+                new_params.setlist(name, vals)
+                remove_link = "?" + new_params.urlencode()
+                pairs.append((display, remove_link))
+
+            active_filters.append({
+                "label": label,
+                "pairs": pairs,
+            })
+
+        # Gamintojai: tik tie, kurie yra tarp prekių pagal kitus filtrus
+        manuf_qs = self.facet_queryset(filterset, ["manufacturer"])
+        selected = filterset.data.getlist("manufacturer")
+        names = set(manuf_qs.values_list("manufacturer", flat=True)) | set(selected)
+        filterset.form.fields["manufacturer"].choices = [(m, m) for m in sorted(names, key=str.lower)]
+
+        # Kategorijos: tik tos, kuriose yra prekių pagal kitus filtrus
+        cat_qs = self.facet_queryset(filterset, ["product_category"])
+        selected = filterset.data.getlist("product_category")
+        ids = list(cat_qs.values_list("product_category", flat=True)) + selected
+        context["filter_categories"] = ProductCategory.objects.filter(pk__in=ids).order_by("title")
+
+        context["active_filters"] = active_filters
+        context["max_price"] = max_price
+        context["min_price"] = min_price
+
         return context
+
+class ProductCategoryListView(ProductListView):
+    template_name = 'products_category.html'
+
+    def get_queryset(self):
+        # Paimam ProductListView prekes ir paliekam tik šios kategorijos
+        return super().get_queryset().filter(product_category=self.kwargs['product_category'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_title'] = ProductCategory.objects.get(pk=self.kwargs['product_category']).title
+        return context
+
 
 class OrderLineUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = OrderLine
@@ -148,7 +254,3 @@ class OrderLineDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Delet
 
     def test_func(self):
         return Order.objects.get(pk=self.get_object().order.pk).client == self.request.user
-
-def product_list(request):
-    f = ProductFilter(request.GET, queryset=Product.objects.all())
-    return render(request, 'products.html', {'filter': f})

@@ -1,34 +1,48 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Parduotuvė - Visos prekės{% endblock %}
 
 {% block content %}
-<div class="grid-container">
-    <div class="ps-3 border">
-        <form method="get" class="">
-            {% for field in filter.form %}
-                <div class="fw-bold mb-1 fs-5">{{ field.label_tag }}</div>
-                <div class="mb-3">{{ field }}</div>
-            {% endfor %}
-            <button type="submit" class="btn btn-success">Filruoti</button>
-            <a class="btn btn-warning" href="{% url 'products' %}">Išvalyti filtrus</a>
-        </form>
-        <script src="https://cloudflare.com"></script>
-    </div>
-        <div class="container border">
-            <h2 class="text-start">Visos prekės</h2>
-            <div class="ps-1 d-flex flex-wrap gap-3">
-                {% for product in products %}
-                    {% include 'product_card.html' %}
-                {% empty %}
-                <h5>No products found.</h5>
+
+<div class="container-fluid grid-container pt-3">
+    {% include 'product_filters.html' %}
+    <div class="">
+        {% if request.GET.q and paginator.count %}
+        <h2 class="text-start mt-3 mb-3">Paieškos rezultatai: ieškota <span class="fw-bold">"{{ request.GET.q }}"</span>,
+            rasta
+            prekių ({{ paginator.count }})</h2>
+        {% elif request.GET.q %}
+        <h2 class="text-start mt-3 mb-3">Nerasta prekių pagal raktažodį <span
+                class="fw-bold">"{{ request.GET.q }}"</span>, patikslinkite paieškos kriterijus
+        </h2>
+        {% else %}
+            {% if paginator.count %}
+                <h2>Visos prekės ( {{ paginator.count }} )</h2>
+            {% else %}
+                <h2>Prekių pagal pasirinktus filtrus nėra, pakoreguokite filtrus</h2>
+            {% endif %}
+        {% endif %}
+        {% if active_filters %}
+        <div class="active-filters mb-3">
+            {% for f in active_filters %}
+            <div class="filter-row">
+                <span>{{ f.label }} </span>
+                {% for val, link in f.pairs %}
+                <span class="filter-badge"> {{ val }}<a href="{{ link }}">×</a></span>
                 {% endfor %}
             </div>
+            {% endfor %}
+            <a class="btn btn-warning" href="{% url 'products' %}">Išvalyti filtrus</a>
         </div>
+        {% endif %}
+
+        <div class="product-grid">
+            {% for product in products %}
+            {% include 'product_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% include 'pagination_products_cbw.html' %}
 {% endblock %}
-
-
-
-

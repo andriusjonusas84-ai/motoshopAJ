@@ -40,6 +40,10 @@ a:hover {
     text-decoration: underline;
 }
 
+.no-underline:hover {
+    text-decoration: none;
+}
+
 aside {
     width: 30%;
     padding-left: 15px;
@@ -107,16 +111,165 @@ aside {
 .grid-container {
     width: 100%;
     display: grid;
-    grid-template-columns: 15% auto 10%;
-    grid-gap: 5px;
-    padding: 5px;
-    border: 0px solid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    column-gap: 1rem;
 }
 
 p {
     margin-bottom: 5px ;
 }
 
+/* filters in products that are shown when selected*/
+.active-filters {
+    margin-bottom: 15px;
+    max-width: 79rem;
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid #C3CBD2;
+}
+
+/* each filter in separate row */
+.filter-row {
+    margin-bottom: 8px;
+}
+
+/*value of a certain filter, what is shown inside a box of each filter */
+.filter-badge {
+    display: inline-block;
+    background: #eee;
+    padding: 6px 10px;
+    margin-right: 6px;
+    border-radius: 8px;
+    border: 1px solid #C3CBD2;
+    font-weight: bold;
+}
+
+/* link of a certain filter value*/
+.filter-badge a {
+    margin-left: 6px;
+    color: #c00;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/*price slider */
+#final_price_slider {
+    height: 10px; /*height of a slider*/
+    width: 190px;
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-bottom: 30px;
+}
+
+/*primary container for a slider*/
+.noUi-target {
+    border-radius: 4px;
+    border: 0px solid;
+    background: yellow; /*color of inactive slider part*/
+}
+
+.noUi-connect {
+    background: darkgreen; /* slider color */
+}
+
+/* end points of a slider */
+.noUi-handle {
+    border-radius: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    top: -6px !important;
+    background: #fff !important;
+    border: 2px solid darkgreen !important; /* green outline */
+    box-shadow: 0 0 4px rgba(0,0,0,0.2) !important;
+}
 
 
+.noUi-handle:before, .noUi-handle:after {
+    display: none;
+}
 
+/* endpoint values container above slider */
+.slider-values {
+    display: flex;
+    gap: 40px;
+}
+
+/*endpoint values above slider */
+.slider-value-box {
+    width: 80px;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    background: #fff;
+    font-size: 16px;
+}
+
+/*endpoint values above slider, what happens when pressed on box, green border appears*/
+.slider-value-box:focus {
+    border: 2px solid darkgreen;
+    outline: none; /* Removes the default blue glow */
+}
+
+/*removes up and down arrows from slider endpoint values*/
+.slider-value-box::-webkit-inner-spin-button,
+.slider-value-box::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* form filters fields input borders */
+.custom-border-filter {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* form filters fields input borders, what happens when boxed pressed, green border appears */
+.custom-border-filter:focus {
+  border: 2px solid darkgreen;
+  outline: none; /* Removes the default blue glow */
+}
+
+.hidden-option {
+    display: none;
+}
+
+ul{
+    padding-left: 0px;
+    margin-left: 0;
+}
+
+/* Prekių tinklelis: kortelės po 15rem, telpa kiek tilps, daugiausia 5 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 15rem);
+    gap: 1rem;
+    max-width: 79rem;
+}
+
+@media (max-width: 767.98px) {
+    .grid-container { grid-template-columns: 1fr; }   /* filtrai virš prekių */
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-grid .my-extra-rounded-card { width: auto; height: auto; }
+}
+
+/* Parduotuvės puslapiuose platesnis konteineris, kad tilptų 5 kortelės */
+.shop-container {
+    max-width: 1560px;
+}
+
+/* Kainos laukeliai: paslepiamos rodyklės aukštyn/žemyn */
+#final_price_value_min::-webkit-outer-spin-button,
+#final_price_value_min::-webkit-inner-spin-button,
+#final_price_value_max::-webkit-outer-spin-button,
+#final_price_value_max::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#final_price_value_min,
+#final_price_value_max {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}

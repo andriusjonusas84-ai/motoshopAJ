@@ -7,7 +7,7 @@
     {% if user.photo %}
     <img src="{{ user.photo.url }}" class="rounded-circle" alt="" style="width:200px">
     {% endif %}
-    <h2 class="text-center mb-1" >Kliento duomenys</h2>
+    <h2 class="text-center mb-1" >Mano duomenys</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% load crispy_forms_tags %}
