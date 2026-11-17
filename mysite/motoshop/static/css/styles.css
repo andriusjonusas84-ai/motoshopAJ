@@ -122,6 +122,8 @@ p {
 /* filters in products that are shown when selected*/
 .active-filters {
     margin-bottom: 15px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
     max-width: 79rem;
     padding: 5px;
     border-radius: 8px;

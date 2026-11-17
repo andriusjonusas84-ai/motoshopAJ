@@ -15,24 +15,38 @@
             </nav>
         </div>
         {% if paginator.count %}
-            <h2>{{ category_title }} ( {{ paginator.count }} )</h2>
+        <h2>{{ category_title }} ( {{ paginator.count }} )</h2>
         {% else %}
-                <h2>{{ category_title }} : prekių pagal pasirinktus filtrus nėra, pakoreguokite filtrus</h2>
+        <h2>{{ category_title }} : prekių pagal pasirinktus filtrus nėra, pakoreguokite filtrus</h2>
         {% endif %}
         {% if active_filters %}
         <div class="active-filters mb-3">
-            {% for f in active_filters %}
-            <div class="filter-row">
-                <span>{{ f.label }} </span>
-                {% for val, link in f.pairs %}
-                <span class="filter-badge"> {{ val }}<a href="{{ link }}">×</a></span>
+            <div class="">
+                {% for f in active_filters %}
+                <div class="filter-row">
+                    <span>{{ f.label }} </span>
+                    {% for val, link in f.pairs %}
+                    <span class="filter-badge"> {{ val }}<a href="{{ link }}">×</a></span>
+                    {% endfor %}
+                </div>
                 {% endfor %}
             </div>
-            {% endfor %}
-            <a class="btn btn-warning" href="{{ request.path }}">Išvalyti filtrus</a>
+            <div class="text-end">
+                <a class="btn btn-outline-warning text-dark fw-bold border-success no-underline"
+                   href="{{ request.path }}">Išvalyti filtrus</a>
+            </div>
         </div>
         {% endif %}
-
+        {% if paginator.count %}
+        <div class="d-flex justify-content-end align-items-center gap-2 mb-2 " style="max-width: 79rem;">
+            <select name="sort" id="id_sort" form="product-filter-form" class="form-select form-select-sm w-auto border border-success fs-6"
+                    onchange="this.form.requestSubmit()">
+                {% for value, label in filter.form.fields.sort.choices %}
+                <option value="{{ value }}" {% if request.GET.sort == value %}selected{% endif %} class="fs-6">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
         <div class="product-grid">
             {% for product in products %}
             {% include 'product_card.html' %}
@@ -41,7 +55,7 @@
     </div>
 </div>
 
-{% include 'pagination_products_cbw.html' %}
+{% include 'pagination_cbw.html' %}
 {% endblock %}
 
 

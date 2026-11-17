@@ -73,6 +73,28 @@ class ProductFilter(django_filters.FilterSet):
 
         return queryset
 
+    SORT_CHOICES = (
+        ('price_asc', 'Pigiausios viršuje'),
+        ('price_desc', 'Brangiausios viršuje'),
+        ('title', 'Pavadinimas: A–Z'),
+        ('newest', 'Naujausios viršuje'),
+    )
+
+    sort = django_filters.ChoiceFilter(choices=SORT_CHOICES, method='filter_sort', label='Rūšiuoti',
+                                       empty_label='Numatytasis')
+
+    def filter_sort(self, queryset, name, value):
+        ordering = {
+            'price_asc': 'final_price',
+            'price_desc': '-final_price',
+            'title': 'title',
+            'newest': ('-new_product', '-pk'),
+        }
+        sort_fields = ordering[value]
+        if isinstance(sort_fields, str):
+            sort_fields = (sort_fields,)
+        return queryset.order_by(*sort_fields)
+
 
     class Meta:
         model = Product

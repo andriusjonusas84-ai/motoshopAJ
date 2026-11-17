@@ -5,7 +5,7 @@
         <input type="hidden" name="q" value="{{ request.GET.q }}">
         {% endif %}
         {% if not category_title %}
-        <div class="filter-group pb-2 pt-2 border">
+        <div class="filter-group pb-2 pt-2">
             <h5 class="ps-1">Kategorija</h5>
             <ul id="filter-list" style="list-style-type: none;">
                 {% for category in filter_categories %}

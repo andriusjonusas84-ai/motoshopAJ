@@ -150,6 +150,9 @@ class ProductListView(FilterView):
         # Loop through filter fields IN ORDER
         for name, field in filterset.form.fields.items():
 
+            if name == "sort":
+                continue
+
             # Special handling for price slider
             if name == "final_price":
                 fp0 = self.request.GET.get("final_price_0")

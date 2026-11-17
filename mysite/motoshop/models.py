@@ -17,6 +17,8 @@ class CustomUser(AbstractUser):
                               null=True,
                               blank=True)
 
+    favorites = models.ManyToManyField('Product', blank=True, related_name='favorited_by')
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.photo:
