@@ -1,6 +1,9 @@
 import math
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
 from django.db.models import Max, Min
 from django.shortcuts import render, reverse, redirect
 from django.urls import reverse_lazy
@@ -107,7 +110,8 @@ class ProductListView(FilterView):
                 or "no-cache" in pragma
         )
 
-        if is_refresh and original:
+        skip = request.session.pop('skip_refresh_check', False)
+        if is_refresh and original and not skip:
             return redirect(request.path)
 
         # 3. Redirect ONLY if empty params were removed
@@ -257,3 +261,23 @@ class OrderLineDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Delet
 
     def test_func(self):
         return Order.objects.get(pk=self.get_object().order.pk).client == self.request.user
+
+@login_required
+@require_POST
+def toggle_favorite(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.user.favorites.filter(pk=pk).exists():
+        request.user.favorites.remove(product)
+    else:
+        request.user.favorites.add(product)
+    request.session['skip_refresh_check'] = True
+    return redirect(request.META.get('HTTP_REFERER', 'products'))
+
+
+class FavoritesListView(LoginRequiredMixin, generic.ListView):
+    template_name = 'favorites.html'
+    context_object_name = 'products'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return self.request.user.favorites.all().order_by('title')

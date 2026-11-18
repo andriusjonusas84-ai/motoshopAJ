@@ -9,8 +9,6 @@ from django import forms
 from django.views import generic
 
 
-
-
 class CustomUser(AbstractUser):
     photo = models.ImageField(verbose_name='Nuotrauka',
                               upload_to='profile_pics',

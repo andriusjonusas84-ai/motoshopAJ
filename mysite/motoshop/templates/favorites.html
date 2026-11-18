@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Patinkančios prekės{% endblock %}
+
+{% block content %}
+<div class="container-fluid grid-container pt-3">
+    <div></div>
+    <div>
+        {% if products %}
+            <h2>Patinkančios prekės ( {{ paginator.count }} )</h2>
+            <div class="product-grid">
+                {% for product in products %}
+                {% include 'product_card.html' %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <h2>Patinkančių prekių dar nėra.</h2>
+            <p class="fs-4">Paspauskite <i class="bi bi-heart"></i> prekės kortelėje, kad ją išsaugotumėte.</p>
+            <a class="btn btn-lg btn-success no-underline mt-2" href="{% url 'products' %}">Parduotuvė</a>
+        {% endif %}
+    </div>
+</div>
+{% include 'pagination_cbw.html' %}
+{% endblock %}

@@ -6,8 +6,9 @@ from .models import CustomUser, Product, Order, OrderLine, Post, Comment, Produc
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        ('Additional info', {'fields': ('photo',)}),
+        ('Additional info', {'fields': ('photo', 'favorites')}),
     )
+    filter_horizontal = UserAdmin.filter_horizontal + ('favorites',)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title','category', 'manufacturer','stock_quantity','stocked','new_product','final_price']

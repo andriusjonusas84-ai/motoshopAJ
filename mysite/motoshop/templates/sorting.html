@@ -1,0 +1,11 @@
+{% if paginator.count %}
+<div class="d-flex justify-content-end align-items-center gap-2 mb-2 " style="max-width: 79rem;">
+    <select name="sort" id="id_sort" form="product-filter-form" class="form-select form-select-sm w-auto fs-6 border-filter"
+            onchange="this.form.requestSubmit()">
+        {% for value, label in filter.form.fields.sort.choices %}
+        <option value="{{ value }}" {% if request.GET.sort == value %}selected{% endif %} class="fs-6">{{ label }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+{% endif %}

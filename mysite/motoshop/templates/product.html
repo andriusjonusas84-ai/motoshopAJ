@@ -7,8 +7,7 @@
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'products' %}">Visos prekės</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'products_category' product.product_category.pk %}">
-                {{ product.product_category.title }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products_category' product.product_category.pk %}">{{ product.product_category.title }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
         </ol>
     </nav>
@@ -20,34 +19,34 @@
         </div>
         <div class="col text-start">
             {% if product.new_product %}
-            <h5 class="card-text fw-bold text-danger text-uppercase"> Naujiena! </h5>
+                <h5 class="card-text fw-bold text-danger text-uppercase"> Naujiena! </h5>
             {% endif %}
             <h5 class="">Prekės kategorija:
-                <a class="" href="{% url 'products_category' product.product_category.pk %}">
-                    {{ product.product_category.title }}</a>
+                <a class="" href="{% url 'products_category' product.product_category.pk %}">{{ product.product_category.title }}</a>
             </h5>
-            <h5 class="">Prekės kodas: {{ product.code }}</h5>
-            <h5 class="mt-2">Ar turime sandelyje:
+            <h5>Prekės kodas: {{ product.code }}</h5>
+            <h5 >Ar turime sandelyje:
                 {% if product.stocked %}
-                <span class="fw-bold text-success">Taip</span>
+                    <span class="fw-bold text-success">Taip</span>
                 {% else %}
-                <span>Ne</span>
+                    Ne
                 {% endif %}
             </h5>
             {% if product.stocked %}
-            <h5 class="">Sandėlio likutis: {{ product.stock_quantity }} vnt.</h5>
+                <h5 class="">Sandėlio likutis: {{ product.stock_quantity }} vnt.</h5>
             {% else %}
-            <h5 class="">Tiekėjo likutis: {{ product.stock_quantity }} vnt.</h5>
+                <h5 class="">Tiekėjo likutis: {{ product.stock_quantity }} vnt.</h5>
             {% endif %}
             {% if product.final_price < product.rrp %}
-            <h5 class="">Įprasta kaina: {{ product.rrp }} &#8364;</h5>
-            <h5 class="fw-bold" style="color: var(--bs-orange);">Pardavimo kaina: {{ product.final_price }} &#8364;</h5>
+                <h5 class="">Įprasta kaina: {{ product.rrp }} &#8364;</h5>
+                <h5 class="fw-bold" style="color: var(--bs-orange);">Pardavimo kaina: {{ product.final_price }} &#8364;</h5>
             {% else %}
-            <h5 class="">Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;<span></span></h5>
+                <h5 class="">Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;<span></span></h5>
             {% endif %}
             <br><br><br><br><br><br><br><br><br>
-            <div class="text-center">
-            <a href="#" class="mt-5 btn btn-lg btn-success no-underline" style="width: 300px;"><i class="bi bi-cart2 fs-5"></i> Į krepšelį</a>
+            <div class="d-flex align-items-center gap-4 product-actions">
+                <a href="#" class="btn btn-lg btn-success no-underline" style="width: 300px;"><i class="bi bi-cart2 fs-5"></i> Į krepšelį</a>
+                {% include 'favorite_heart.html' %}
             </div>
         </div>
     </div>

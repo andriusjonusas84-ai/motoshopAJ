@@ -1,0 +1,16 @@
+<div class="favorite-btn">
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'toggle_favorite' product.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link p-0" title="Patinka">
+                {% if product.pk in favorite_ids %}
+                    <i class="bi bi-heart-fill text-success fs-4"></i>
+                {% else %}
+                    <i class="bi bi-heart text-dark fs-4"></i>
+                {% endif %}
+            </button>
+        </form>
+    {% else %}
+        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" title="Prisijunkite"><i class="bi bi-heart text-dark fs-4"></i></a>
+    {% endif %}
+</div>
