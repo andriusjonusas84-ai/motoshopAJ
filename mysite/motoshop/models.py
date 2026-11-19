@@ -34,6 +34,7 @@ class CustomUser(AbstractUser):
         verbose_name = 'Vartotojas'
         verbose_name_plural = 'Vartotojai'
 
+
 class ProductCategory(models.Model):
     title = models.CharField(verbose_name='Kategorija')
 
@@ -44,14 +45,15 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.title
 
+
 class Product(models.Model):
     title = models.CharField(verbose_name='Pavadinimas')
     code = models.CharField(verbose_name='Prekės kodas', max_length=10)
     product_category = models.ForeignKey(verbose_name='Prekės kategorija',
-                               to=ProductCategory,
-                               on_delete=models.CASCADE,
-                               null=True,
-                               blank=True)
+                                         to=ProductCategory,
+                                         on_delete=models.CASCADE,
+                                         null=True,
+                                         blank=True)
     p_category = (
         ('1', 'Motociklai'),
         ('2', 'Atsarginės dalys'),
@@ -91,6 +93,7 @@ class Product(models.Model):
                               upload_to='product_covers',
                               null=True,
                               blank=True)
+
     def rrp_integer(self):
         return int(self.rrp)
 
@@ -119,6 +122,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Order(models.Model):
     order_date = models.DateField(verbose_name='Užsakymo pateikimo data', auto_now_add=True)
@@ -162,19 +166,20 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.pk}'
 
+
 class OrderLine(models.Model):
     order = models.ForeignKey(verbose_name='Užsakymas',
                               to=Order,
                               on_delete=models.DO_NOTHING,
-                              db_constraint = False,
-                              null = False,
-                              blank = False,
-                              related_name = 'ol')
+                              db_constraint=False,
+                              null=False,
+                              blank=False,
+                              related_name='ol')
     product_category = models.ForeignKey(verbose_name='Prekės kategorija',
                                          to=ProductCategory,
                                          on_delete=models.CASCADE,
-                                         null = True,
-                                         blank = True)
+                                         null=True,
+                                         blank=True)
     product = ChainedForeignKey(verbose_name='Produktas',
                                 to=Product,
                                 chained_field="product_category",
@@ -208,6 +213,37 @@ class OrderLine(models.Model):
     def __str__(self):
         return f'{self.product.title} - {self.quantity}'
 
+
+class CartLine(models.Model):
+    client = models.ForeignKey(verbose_name='Klientas',
+                               to=CustomUser,
+                               on_delete=models.CASCADE,
+                               null=False,
+                               blank=False,
+                               related_name='cart_lines')
+    product = models.ForeignKey(verbose_name='Produktas',
+                                to=Product,
+                                on_delete=models.CASCADE,
+                                null=False,
+                                blank=False,
+                                related_name='cart_lines')
+
+    quantity = models.PositiveIntegerField(verbose_name='Kiekis', default=1)
+
+    class Meta:
+        verbose_name = 'Krepšelio eilutė'
+        verbose_name_plural = 'Krepšelio eilutės'
+        unique_together = ('client', 'product')
+
+    def cart_line_sum(self):
+        return self.quantity * self.product.final_price
+
+    cart_line_sum.short_description = 'Prekės suma'
+
+    def __str__(self):
+        return f'{self.product.title} - {self.quantity}'
+
+
 class Post(models.Model):
     title = models.CharField(verbose_name='Pavadinimas')
     content = HTMLField(verbose_name='Tūrinys')
@@ -216,7 +252,7 @@ class Post(models.Model):
                                on_delete=models.SET_NULL,
                                null=True,
                                blank=True,
-                               related_name = 'posts')
+                               related_name='posts')
     created = models.DateTimeField(verbose_name='Įrašas sukūrtas', auto_now_add=True)
     cover = models.ImageField(verbose_name='Viršelis',
                               upload_to='posts_covers',
@@ -230,6 +266,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+
 class Comment(models.Model):
     post = models.ForeignKey(verbose_name='Įrašas',
                              to="Post",
@@ -239,7 +276,7 @@ class Comment(models.Model):
     author = models.ForeignKey(verbose_name='Komentatorius',
                                to=CustomUser,
                                on_delete=models.CASCADE)
-    created = models.DateTimeField(verbose_name='Komentaro data',auto_now_add=True)
+    created = models.DateTimeField(verbose_name='Komentaro data', auto_now_add=True)
 
     def __str__(self):
         return f"{self.content}"
@@ -249,16 +286,17 @@ class Comment(models.Model):
         verbose_name = 'Komentaras'
         verbose_name_plural = 'Komentarai'
 
+
 class ProductReview(models.Model):
     product = models.ForeignKey(verbose_name='Produktas',
-                             to="Product",
-                             on_delete=models.CASCADE,
-                             related_name='reviews')
+                                to="Product",
+                                on_delete=models.CASCADE,
+                                related_name='reviews')
     content = models.TextField(verbose_name='Komentaras')
     author = models.ForeignKey(verbose_name='Komentatorius',
                                to=CustomUser,
                                on_delete=models.CASCADE)
-    created = models.DateTimeField(verbose_name='Komentaro data',auto_now_add=True)
+    created = models.DateTimeField(verbose_name='Komentaro data', auto_now_add=True)
 
     def __str__(self):
         return f"{self.content}"
@@ -267,4 +305,3 @@ class ProductReview(models.Model):
         ordering = ["-pk"]
         verbose_name = 'Komentaras'
         verbose_name_plural = 'Komentarai'
-
