@@ -9,7 +9,7 @@ from django.shortcuts import render, reverse, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import FormMixin
-from .models import CustomUser, Product, Order, OrderLine, ProductCategory
+from .models import CustomUser, Product, Order, OrderLine, ProductCategory, CartLine
 from .filters import ProductFilter
 from django_filters.views import FilterView
 from .forms import CustomUserCreationForm, ProductReviewForm
@@ -266,10 +266,11 @@ class OrderLineDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Delet
 @require_POST
 def toggle_favorite(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    if request.user.favorites.filter(pk=pk).exists():
-        request.user.favorites.remove(product)
+    favorites = request.user.favorites
+    if favorites.filter(pk=pk).exists():
+        favorites.remove(product)
     else:
-        request.user.favorites.add(product)
+        favorites.add(product)
     request.session['skip_refresh_check'] = True
     return redirect(request.META.get('HTTP_REFERER', 'products'))
 
@@ -281,3 +282,20 @@ class FavoritesListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return self.request.user.favorites.all().order_by('title')
+
+@login_required
+@require_POST
+def add_to_cart(request, pk):
+    client = request.user
+    product = get_object_or_404(Product, pk=pk)
+    cart = client.cart_lines
+    line = cart.filter(product=product).first()
+
+    if line:
+        line.quantity += 1
+        line.save()
+    else:
+        cart.create(product=product)
+
+    request.session['skip_refresh_check'] = True
+    return redirect(request.META.get('HTTP_REFERER', 'products'))

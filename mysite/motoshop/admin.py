@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Product, Order, OrderLine, Post, Comment, ProductCategory
+from .models import CustomUser, Product, Order, OrderLine, Post, Comment, ProductCategory, CartLine
 
 
 
@@ -39,7 +39,7 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ['pk','title']
     # prepopulated_fields = {'slug': ('title',)}
 
-
+admin.site.register(CartLine)
 admin.site.register(OrderLine, OrderLineAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Product,ProductAdmin)

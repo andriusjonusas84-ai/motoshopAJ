@@ -21,8 +21,6 @@
                 <span class="fw-bold">{{ product.final_price_integer }}<sup>{{ product.final_price_decimal }}</sup> &#8364;</span>
             </p>
         {% endif %}
-        <div class="text-center">
-            <a href="#" class="btn btn-success mt-3 no-underline px-5 py-2"><i class="bi bi-cart2"></i> Į krepšelį</a>
-        </div>
+        {% include 'add_to_cart.html' %}
     </div>
 </div>

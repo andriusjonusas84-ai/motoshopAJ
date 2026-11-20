@@ -44,8 +44,8 @@
                 <h5 class="">Pardavimo kaina: <span class="fw-bold">{{ product.final_price }} &#8364;<span></span></h5>
             {% endif %}
             <br><br><br><br><br><br><br><br><br>
-            <div class="d-flex align-items-center gap-4 product-actions">
-                <a href="#" class="btn btn-lg btn-success no-underline" style="width: 300px;"><i class="bi bi-cart2 fs-5"></i> Į krepšelį</a>
+            <div class="d-flex justify-content-center align-items-center gap-4 product-actions">
+                {% include 'add_to_cart.html' %}
                 {% include 'favorite_heart.html' %}
             </div>
         </div>

@@ -16,4 +16,5 @@ urlpatterns = [
     path('repair',views.repair,name='repair'),
     path('orderline/<int:pk>/update',views.OrderLineUpdateView.as_view(), name='orderline_update'),
     path('orderline/<int:pk>/delete',views.OrderLineDeleteView.as_view(), name='orderline_delete'),
+    path('cart/add/<int:pk>', views.add_to_cart, name='add_to_cart'),
 ]
