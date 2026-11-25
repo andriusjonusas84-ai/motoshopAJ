@@ -1,0 +1,29 @@
+{% load price_filters %}
+{% if cart_preview %}
+    <h5 class="mt-2 ms-2">Prekių krepšelis</h5><hr class="mb-0">
+    {% for line in cart_preview %}
+        <div class="mini-cart-line d-flex align-items-center gap-2 px-2 py-2 border-bottom">
+            <a href="{% url 'product' line.product.pk %}">
+                <img src="{{ line.product.cover.url }}" alt="" style="height:50px; width:50px; object-fit:contain;"></a>
+            <div class="small" style="min-width: 0;">
+                <div class="text-truncate"><a href="{% url 'product' line.product.pk %}">{{ line.product.title }}</a></div>
+                <div>{{ line.quantity }} × {{ line.product.final_price|price }} &#8364;</div>
+            </div>
+            <div class="ms-auto">{% include 'remove_from_cart.html' with product=line.product %}</div>
+        </div>
+    {% endfor %}
+    {% if cart_product_count > 3 %}
+    <a href="{% url 'cart' %}" class="text-center text-success fw-bold">Visos prekės ({{ cart_product_count }}) <i class="bi bi-arrow-right"></i></a>
+    {% endif %}
+    <div class="d-flex flex-column fw-bold px-2 py-2 fs-5 gap-2">
+        <div class="d-flex justify-content-between">
+            <h5>Viso suma:</h5>
+            <span>{{ cart_sum|price }} &#8364;</span>
+        </div>
+        <a class="btn btn-lg btn-success text-white no-underline fw-bold" href="">Pirkti</a>
+    </div>
+{% else %}
+    <h5 class="mt-2 ms-2">Prekių krepšelis</h5><hr class="mb-1">
+    <p class="ms-2">Jūsų krepšelis tuščias</p>
+{% endif %}
+

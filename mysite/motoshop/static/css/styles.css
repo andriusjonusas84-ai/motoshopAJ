@@ -65,7 +65,7 @@ aside {
 
 .dropdown-content {
     display: none;  /*to not show dropdown items*/
-    z-index: 1; /*to show dropdown content on top of objects*/
+    z-index: 1000; /*to show dropdown content on top of objects*/
     text-align: left;
     position: absolute; /*just drops down content*/
     right: 0;
@@ -80,7 +80,7 @@ aside {
     margin-top: 5px;
 }
 
-.dropdown-content a {
+.dropdown-content a:not(.btn) {
   display: block;        /* Makes the link take the full width [16, 17] */
   padding: 10px 10px;    /* Adds space so the link is easier to click */
   text-decoration: none; /* Removes the underline */
@@ -99,7 +99,7 @@ aside {
   display: block;
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:not(.btn):hover {
     background-color: #b2d8d8;
 }
 
@@ -303,4 +303,47 @@ ul{
 .border-filter {
     border: 1px solid #C3CBD2 !important;
     border-radius: 4px !important;
+}
+
+/* Tooltip: baltas fonas, juodas tekstas ir rėmelis */
+.tooltip {
+    --bs-tooltip-bg: white;
+    --bs-tooltip-color: black;
+    --bs-tooltip-opacity: 1;
+    --bs-tooltip-font-size: 1rem;
+}
+
+.tooltip .tooltip-inner {
+    border: 1px solid darkgreen;
+}
+
+.tooltip .tooltip-arrow {
+    --bs-tooltip-bg: darkgreen;
+}
+
+
+.remove-btn:hover i {
+    color: red !important;
+}
+
+/* Mini krepšelis viršutiniame meniu */
+.mini-cart {
+    width: 320px;
+}
+
+/* Mini krepšelyje: nuorodos prie nuotraukos ir pavadinimo be meniu punkto stiliaus */
+.mini-cart div a:not(.btn) {
+    display: inline;
+    padding: 0;
+    border-bottom: none;
+}
+
+.mini-cart div a:not(.btn):hover {
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+/* Mažesnė šiukšliadėžė mini krepšelyje */
+.mini-cart .remove-btn i {
+    font-size: 1rem !important;
 }

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Product, Order, OrderLine, Post, Comment, ProductCategory, CartLine
+from .models import CustomUser, Product, Order, OrderLine, ProductCategory, CartLine
 
 
 
@@ -44,7 +44,5 @@ admin.site.register(OrderLine, OrderLineAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Order,OrderAdmin)
-admin.site.register(Post)
-admin.site.register(Comment)
 admin.site.register(ProductCategory,ProductCategoryAdmin)
 

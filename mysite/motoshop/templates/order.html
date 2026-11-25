@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load price_filters %}
 
 {% block title %}Užsakymas{% endblock %}
 
@@ -12,7 +13,7 @@
             <p class="text-start text-uppercase fw-bold {% if order.status == '6' %}text-success{% endif %}">{{ order.get_status_display }}</p>
         </div>
         <div class="col text-end">
-            <a class="btn btn-success text-white mt-2 no-underline" href="{% url 'myorders' %}" class="">Grįžti į užsakymų sąrašą</a>
+            <a class="btn btn-success text-white mt-2 no-underline" href="{% url 'myorders' %}" class=""><i class="bi bi-arrow-left"></i> Grįžti į užsakymų sąrašą</a>
         </div>
     </div>
 
@@ -28,23 +29,16 @@
         <tbody>
             {% for line in order.ol.all %}
             <tr>
-                <td><a href="{% url 'product' line.product.pk %}"><img class="" src="{{ line.product.cover.url  }}"
-                                                                       alt="..." style="height:100px" ><a/></td>
-                <td class="ps-0"><a href="{% url 'product' line.product.pk %}" class="text-dark">{{ line.product.title }}</a>
-                    {% if order.order_status == 1 %}
-                    <a class="btn btn-warning" href="{% url 'orderline_update' line.pk %}">Redaguoti</a>
-                    <a class="btn btn-danger" href="{% url 'orderline_delete' line.pk %}">Trinti</a>
-                    {% else %}
-                    {% endif %}
-                </td>
-                <td class=""> {{ line.product.final_price }} &#8364; </td>
+                <td><a href="{% url 'product' line.product.pk %}"><img class="" src="{{ line.product.cover.url  }}" alt="..." style="height:100px" ></a></td>
+                <td class="ps-0"><a href="{% url 'product' line.product.pk %}" class="fw-bold text-dark">{{ line.product.title }}</a></td>
+                <td class=""> {{ line.product.final_price|price }} &#8364; </td>
                 <td> {{ line.quantity }} </td>
-                <td class="fw-bold"> {{ line.order_line_sum }} &#8364;</td>
+                <td class="fw-bold"> {{ line.order_line_sum|price }} &#8364;</td>
             </tr>
             {% endfor %}
             <tr>
                 <td colspan="4" class="text-end fw-bold text-uppercase">Viso užsakymo suma</td>
-                <td class="fw-bold"> {{ order.order_sum }} &#8364; </td>
+                <td class="fw-bold"> {{ order.order_sum|price }} &#8364; </td>
             </tr>
         </tbody>
     </table>

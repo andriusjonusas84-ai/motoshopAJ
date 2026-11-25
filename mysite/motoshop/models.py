@@ -94,28 +94,6 @@ class Product(models.Model):
                               null=True,
                               blank=True)
 
-    def rrp_integer(self):
-        return int(self.rrp)
-
-    def rrp_decimal(self):
-        parts = math.modf(self.rrp)
-        if round(parts[0], 2) == 0:
-            b = str('00')
-        else:
-            b = str(round(parts[0], 2)).split('.')[1]
-        return b
-
-    def final_price_integer(self):
-        return int(self.final_price)
-
-    def final_price_decimal(self):
-        parts = math.modf(self.final_price)
-        if round(parts[0], 2) == 0:
-            b = str('00')
-        else:
-            b = str(round(parts[0], 2)).split('.')[1]
-        return b
-
     class Meta:
         verbose_name = 'Prekė'
         verbose_name_plural = 'Prekės'
@@ -242,50 +220,6 @@ class CartLine(models.Model):
 
     def __str__(self):
         return f'{self.product.title} - {self.quantity}'
-
-
-class Post(models.Model):
-    title = models.CharField(verbose_name='Pavadinimas')
-    content = HTMLField(verbose_name='Tūrinys')
-    author = models.ForeignKey(verbose_name='Autorius',
-                               to=CustomUser,
-                               on_delete=models.SET_NULL,
-                               null=True,
-                               blank=True,
-                               related_name='posts')
-    created = models.DateTimeField(verbose_name='Įrašas sukūrtas', auto_now_add=True)
-    cover = models.ImageField(verbose_name='Viršelis',
-                              upload_to='posts_covers',
-                              null=True,
-                              blank=True)
-
-    class Meta:
-        verbose_name = 'Įrašas'
-        verbose_name_plural = 'Įrašai'
-
-    def __str__(self):
-        return self.title
-
-
-class Comment(models.Model):
-    post = models.ForeignKey(verbose_name='Įrašas',
-                             to="Post",
-                             on_delete=models.CASCADE,
-                             related_name='comments')
-    content = models.TextField(verbose_name='Komentaras')
-    author = models.ForeignKey(verbose_name='Komentatorius',
-                               to=CustomUser,
-                               on_delete=models.CASCADE)
-    created = models.DateTimeField(verbose_name='Komentaro data', auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.content}"
-
-    class Meta:
-        ordering = ["-pk"]
-        verbose_name = 'Komentaras'
-        verbose_name_plural = 'Komentarai'
-
 
 class ProductReview(models.Model):
     product = models.ForeignKey(verbose_name='Produktas',

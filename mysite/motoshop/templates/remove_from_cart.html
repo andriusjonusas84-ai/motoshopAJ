@@ -1,0 +1,8 @@
+<div class="remove-btn">
+    <form method="post" action="{% url 'remove_from_cart' product.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-link p-0" title="Pašalinti">
+            <i class="bi bi-trash3 fs-4 text-dark"></i>
+        </button>
+    </form>
+</div>

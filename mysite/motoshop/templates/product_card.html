@@ -1,3 +1,4 @@
+{% load price_filters %}
 <div class="card my-extra-rounded-card">
     {% include 'favorite_heart.html' %}
     <a href="{% url 'product' product.pk %}"><img class="card-img-top" src="{{ product.cover.url  }}" alt="Card image cap"></a>
@@ -11,14 +12,14 @@
         {% endif %}
         {% if product.final_price < product.rrp %}
             <p class="card-text mt-auto mb-0">Įprasta kaina:
-                <span class="fw-bold">{{ product.rrp_integer }}<sup>{{ product.rrp_decimal }}</sup> &#8364;</span>
+                <span class="fw-bold">{{ product.rrp|price }} &#8364;</span>
             </p>
             <p class="card-text mb-1">Pardavimo kaina:
-                <span class="fw-bold" style="color: var(--bs-orange);">{{ product.final_price_integer }}<sup>{{ product.final_price_decimal }}</sup> &#8364;</span>
+                <span class="fw-bold" style="color: var(--bs-orange);">{{ product.final_price|price}} &#8364;</span>
             </p>
         {% else %}
             <p class="card-text mt-auto mb-1">Pardavimo kaina:
-                <span class="fw-bold">{{ product.final_price_integer }}<sup>{{ product.final_price_decimal }}</sup> &#8364;</span>
+                <span class="fw-bold">{{ product.final_price|price }} &#8364;</span>
             </p>
         {% endif %}
         {% include 'add_to_cart.html' %}

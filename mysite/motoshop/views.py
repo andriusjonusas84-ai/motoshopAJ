@@ -1,5 +1,6 @@
 import math
-
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -283,6 +284,7 @@ class FavoritesListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return self.request.user.favorites.all().order_by('title')
 
+
 @login_required
 @require_POST
 def add_to_cart(request, pk):
@@ -299,3 +301,56 @@ def add_to_cart(request, pk):
 
     request.session['skip_refresh_check'] = True
     return redirect(request.META.get('HTTP_REFERER', 'products'))
+
+class CartListView(LoginRequiredMixin, generic.ListView):
+    template_name = 'cart.html'
+    context_object_name = 'cart'
+
+    def get_queryset(self):
+        return self.request.user.cart_lines.select_related('product').order_by('-pk')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cart_sum'] = sum(line.cart_line_sum() for line in context['cart'])
+        return context
+
+
+@login_required
+@require_POST
+def remove_from_cart(request, pk):
+    client = request.user
+    product = get_object_or_404(Product, pk=pk)
+    cart = client.cart_lines
+    line = cart.filter(product=product).first()
+
+    line.delete()
+
+    request.session['skip_refresh_check'] = True
+    return redirect(request.META.get('HTTP_REFERER', 'cart'))
+
+@login_required
+@require_POST
+def remove_from_cart(request, pk):
+    cart = request.user.cart_lines
+    cart.filter(product_id=pk).delete()
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        html = render_to_string('mini_cart.html', request=request)
+        return JsonResponse({'html': html, 'count': cart.count()})
+
+    request.session['skip_refresh_check'] = True
+    return redirect(request.META.get('HTTP_REFERER', 'cart'))
+
+
+
+@login_required
+@require_POST
+def decrease_cart(request, pk):
+    line = request.user.cart_lines.filter(product_id=pk).first()
+    if line:
+        if line.quantity > 1:
+            line.quantity -= 1
+            line.save()
+        else:
+            line.delete()
+    return redirect('cart')
