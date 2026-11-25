@@ -10,9 +10,11 @@
             <ul id="filter-list" style="list-style-type: none;">
                 {% for category in filter_categories %}
                 <li class="filter-item {% if forloop.counter > 4 %}hidden-option{% endif %} ps-1">
-                                        <input type="checkbox" name="product_category" value="{{ category.id }}"
-                           {% if category.id|stringformat:"s" in filter.form.product_category.value %}checked{% endif %}>
-                    {{ category.title }}
+                    <label>
+                        <input type="checkbox" name="product_category" value="{{ category.id }}"
+                           {% if category.id|stringformat:'s' in filter.form.product_category.value %}checked{% endif %}>
+                        {{ category.title }}
+                    </label>
                 </li>
                 {% endfor %}
             </ul>
@@ -38,7 +40,7 @@
             <h5 class="ps-1">Gamintojas</h5>
             <ul class="ps-1" style="list-style-type: none; max-height: 200px; overflow-y: auto;">
                 {% for checkbox in filter.form.manufacturer %}
-                <li>{{ checkbox.tag }} {{ checkbox.choice_label }}</li>
+                <li><label>{{ checkbox.tag }} {{ checkbox.choice_label }}</label></li>
                 {% endfor %}
             </ul>
         </div>

@@ -347,3 +347,8 @@ ul{
 .mini-cart .remove-btn i {
     font-size: 1rem !important;
 }
+
+/* Filtruose: tekstas prie varnelės paspaudžiamas */
+#product-filter-form label {
+    cursor: pointer;
+}
